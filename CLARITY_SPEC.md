@@ -1,4 +1,4 @@
-# Clarity — Life Journal · SPEC v1.0
+# Clarity — Life Journal · SPEC v1.1
 
 > **This document is the single source of truth for the Clarity app.**
 > Upload this file alongside `index.html` (and optionally a JSON backup) at the start of every Claude session.
@@ -94,6 +94,28 @@ They should never be merged. The inbox *pattern* is the same, the *content* is d
 - **Resolved** — completed or no longer relevant
 - **Archived** — closed, kept for record
 
+### Dev Notes (Settings)
+
+- Stored in `db.devNotes[]` — survives export/import
+- Located in Settings overlay, below Data section
+- Each note has a **checkbox** to mark as done/tested
+- Ticking a note strikes through its text and records `checkedAt` timestamp
+- Checked notes are grouped into a collapsible "✓ Show archived (n)" section
+- Unchecked notes can be edited inline; checked notes show "done" date
+- Notes are never auto-deleted — archive by ticking, remove manually with Remove button
+- Use for: feature ideas, bugs noticed, things to build next
+
+### Voice Capture
+
+- 🎙 microphone button in the Quick Capture box (left of the Capture button)
+- Uses **Web Speech API** (SpeechRecognition) — no API key required, works in Chrome/Edge/Safari
+- Tap mic to start: button pulses red (⏹), "● Listening…" status appears below textarea
+- Live transcription appears directly in the capture textarea as you speak
+- Tap ⏹ to stop, or tap Capture → to submit — submitting also stops recording
+- If browser does not support SpeechRecognition, shows an alert explaining the limitation
+- Language: `en-AU` (can be updated in code)
+- Continuous mode: keeps recording until manually stopped
+
 ### AI Layer
 
 - Requires Anthropic API key (stored in localStorage)
@@ -164,6 +186,12 @@ inbox: [{
 patterns: [{
   id, text, createdAt
 }]
+
+devNotes: [{
+  id, text, createdAt,
+  checked,      // bool — ticked when done/tested
+  checkedAt     // timestamp or null
+}]
 ```
 
 ---
@@ -172,7 +200,7 @@ patterns: [{
 
 | Screen | How to reach | Description |
 |---|---|---|
-| Home | Nav: Home | Greeting, quick capture, today items, inbox preview, daily review |
+| Home | Nav: Home | Greeting, quick capture (with voice), today items, inbox preview, daily review |
 | Inbox | Nav: Inbox | Unprocessed captures — AI process or file manually |
 | Life — By Area | Nav: Life | 2-column grid of 7 life areas |
 | Life — All Threads | Nav: Life → All Threads tab | Flat list of all threads, area tags shown |
@@ -180,7 +208,7 @@ patterns: [{
 | Thread Detail | Tap any thread | Entry thread + AI summary + add/edit entries |
 | Patterns | Nav: Patterns | User-recorded patterns + AI analysis of log entries |
 | Daily Review | Home button | 3-step guided overlay |
-| Settings | Gear icon on Home | Name, API key, theme selection, export/import |
+| Settings | Gear icon on Home | Name, API key, theme selection, dev notes, export/import |
 | Setup | First launch | Name + optional API key |
 
 ---
@@ -265,6 +293,7 @@ Sits alongside Covenant as a sister repo on the same GitHub account. No conflict
 | Version | Date | Change |
 |---|---|---|
 | v1.0 | 2026-03-15 | Initial build: quick capture, inbox with AI processing, 7 life areas, threads (5 types), entries (7 types), task/appointment completion toggles, today view on home, By Area + All Threads views, pattern recording + AI analysis, daily review overlay, AI entry assist, AI thread summaries, 5 themes (Forest/Cloud/Ocean/Dawn/Stone), export/import JSON, PWA |
+| v1.1 | 2026-03-15 | Dev notes in Settings (checkbox archive, collapsible archived section, inline edit); voice capture via Web Speech API (live transcription into capture box, pulsing mic button, en-AU locale) |
 
 ---
 
@@ -294,4 +323,4 @@ Sits alongside Covenant as a sister repo on the same GitHub account. No conflict
 
 ---
 
-*Clarity SPEC v1.0 — Built with Claude Sonnet, March 2026*
+*Clarity SPEC v1.1 — Built with Claude Sonnet, March 2026*
