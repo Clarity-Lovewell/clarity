@@ -304,6 +304,45 @@ select option{background:var(--sf2);color:var(--tx);}
 .empty-ttl{font-family:'DM Serif Display',Georgia,serif;font-size:18px;color:var(--tx);margin-bottom:6px;font-weight:400;}
 .empty-txt{font-size:14px;line-height:1.6;}
 
+/* ══ CALENDAR ══ */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.cal-nav-btn{background:none;border:1px solid var(--br);color:var(--ac);cursor:pointer;font-size:16px;padding:6px 12px;border-radius:8px;transition:all .18s;line-height:1;}
+.cal-nav-btn:hover{border-color:var(--brs);background:var(--sf);}
+.cal-week-lbl{font-family:'DM Serif Display',Georgia,serif;font-size:16px;color:var(--tx);font-weight:400;}
+.cal-days{display:flex;gap:6px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+.cal-days::-webkit-scrollbar{display:none;}
+.cal-day-btn{flex:1;min-width:40px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;border-radius:10px;border:1px solid var(--br);background:transparent;cursor:pointer;transition:all .18s;}
+.cal-day-btn:hover{border-color:var(--brs);background:var(--sf2);}
+.cal-day-btn.today{border-color:var(--ac);background:var(--acf);}
+.cal-day-btn.selected{border-color:var(--ac);background:var(--ac);}
+.cal-day-name{font-size:10px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--mu);}
+.cal-day-btn.selected .cal-day-name,.cal-day-btn.selected .cal-day-num{color:var(--bg);}
+.cal-day-btn.today .cal-day-name,.cal-day-btn.today .cal-day-num{color:var(--ac);}
+.cal-day-btn.selected.today .cal-day-name,.cal-day-btn.selected.today .cal-day-num{color:var(--bg);}
+.cal-day-num{font-family:'DM Serif Display',Georgia,serif;font-size:18px;color:var(--tx);font-weight:400;line-height:1;}
+.cal-dot{width:5px;height:5px;border-radius:50%;background:var(--ac);opacity:.7;}
+.cal-day-btn.selected .cal-dot{background:var(--bg);}
+.cal-items{display:flex;flex-direction:column;gap:8px;}
+.cal-item{display:flex;align-items:flex-start;gap:12px;padding:12px 15px;background:var(--sf);border:1px solid var(--br);border-radius:12px;cursor:pointer;transition:all .18s;}
+.cal-item:hover{border-color:var(--brs);background:var(--sf2);}
+.cal-item.task{border-left:3px solid var(--blu);}
+.cal-item.action{border-left:3px solid var(--ac);}
+.cal-item.appointment{border-left:3px solid var(--grn);}
+.cal-item.is-done{opacity:.42;}
+.cal-item-time{font-size:12px;color:var(--ac);font-weight:500;min-width:38px;padding-top:2px;}
+.cal-item-body{flex:1;}
+.cal-item-text{font-size:15px;color:var(--tx);line-height:1.4;}
+.cal-item.is-done .cal-item-text{text-decoration:line-through;color:var(--txd);}
+.cal-item-thread{font-size:12px;color:var(--mu);margin-top:2px;}
+.cal-empty{text-align:center;padding:32px 20px;color:var(--txd);}
+.cal-empty-ico{font-size:30px;margin-bottom:8px;}
+
+/* ══ NOTIF STATUS ══ */
+.notif-status{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:6px 12px;border-radius:8px;margin-bottom:10px;}
+.notif-status.granted{background:rgba(90,154,104,.12);color:var(--grn);}
+.notif-status.denied{background:rgba(200,112,112,.10);color:var(--red);}
+.notif-status.default{background:var(--sf2);color:var(--txd);}
+
 /* ══ MISC ══ */
 .div{height:1px;background:var(--br);margin:16px 0;}
 .mt8{margin-top:8px;}.mt12{margin-top:12px;}.mt16{margin-top:16px;}
@@ -331,7 +370,7 @@ select option{background:var(--sf2);color:var(--tx);}
 <div class="ov" id="ov-settings">
   <div class="ov-inner">
     <div class="ov-head"><div class="ov-title">Settings</div><button class="x-btn" onclick="closeSettings()">✕</button></div>
-    <div style="font-size:11px;color:var(--mu);margin-top:-18px;margin-bottom:22px;letter-spacing:.04em;">Clarity v1.1</div>
+    <div style="font-size:11px;color:var(--mu);margin-top:-18px;margin-bottom:22px;letter-spacing:.04em;">Clarity v1.2</div>
     <div class="s-sec">
       <div class="s-sec-t">Profile</div>
       <div class="field"><label>Name</label><input id="s-name" type="text"></div>
@@ -339,6 +378,12 @@ select option{background:var(--sf2);color:var(--tx);}
       <button class="btn btn-p" onclick="saveSettings()">Save</button>
     </div>
     <div class="s-sec"><div class="s-sec-t">Appearance</div><div class="th-row" id="th-row"></div></div>
+    <div class="s-sec">
+      <div class="s-sec-t">Notifications</div>
+      <div id="notif-status-wrap"></div>
+      <p style="font-size:13px;color:var(--mu);line-height:1.55;margin-bottom:10px;">Get reminded when tasks and appointments are due. Works while the app is open or running in the background as a PWA.</p>
+      <button class="btn btn-d btn-s" id="notif-req-btn" onclick="requestNotifPermission()">Enable Notifications</button>
+    </div>
     <div class="s-sec">
       <div class="s-sec-t">Data</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -367,7 +412,10 @@ select option{background:var(--sf2);color:var(--tx);}
 <!-- MODAL -->
 <div class="mo" id="modal" onclick="maybeClose(event)">
   <div class="mo-box">
-    <div class="mo-title" id="mo-title"></div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;">
+      <div class="mo-title" id="mo-title" style="margin-bottom:0;flex:1;padding-right:12px;"></div>
+      <button onclick="closeModal()" style="background:none;border:1px solid var(--br);color:var(--mu);cursor:pointer;font-size:14px;padding:5px 9px;border-radius:7px;line-height:1;flex-shrink:0;transition:all .18s;" onmouseover="this.style.borderColor='var(--brs)';this.style.color='var(--tx)'" onmouseout="this.style.borderColor='var(--br)';this.style.color='var(--mu)'">✕</button>
+    </div>
     <div id="mo-body"></div>
   </div>
 </div>
@@ -461,6 +509,19 @@ select option{background:var(--sf2);color:var(--tx);}
     <div id="ai-analysis"></div>
     <div id="pat-list"></div>
   </div>
+  <!-- CALENDAR -->
+  <div class="screen" id="screen-calendar">
+    <div style="padding-top:8px;margin-bottom:18px;">
+      <h2 class="screen-title" style="margin:0;font-size:26px;">Calendar</h2>
+    </div>
+    <div class="cal-nav">
+      <button class="cal-nav-btn" onclick="calShift(-1)">←</button>
+      <div class="cal-week-lbl" id="cal-week-lbl"></div>
+      <button class="cal-nav-btn" onclick="calShift(1)">→</button>
+    </div>
+    <div class="cal-days" id="cal-days"></div>
+    <div class="cal-items" id="cal-items"></div>
+  </div>
 
 </div>
 
@@ -470,13 +531,14 @@ select option{background:var(--sf2);color:var(--tx);}
   <button class="nav-btn" id="nav-inbox" onclick="navigate('inbox')">
     <div class="nav-ib"><span class="ico">⚡</span><span class="nav-badge" id="nb"></span></div>Inbox
   </button>
+  <button class="nav-btn" id="nav-calendar" onclick="navigate('calendar')"><span class="ico">📅</span>Calendar</button>
   <button class="nav-btn" id="nav-life" onclick="navigate('life')"><span class="ico">◈</span>Life</button>
   <button class="nav-btn" id="nav-patterns" onclick="navigate('patterns')"><span class="ico">✦</span>Patterns</button>
 </nav>
 
 <script>
 // ══ CONSTANTS ══
-const TYPES={task:{label:'Task',icon:'☐',color:'var(--blu)'},appointment:{label:'Appointment',icon:'📅',color:'var(--ac)'},log:{label:'Log',icon:'📓',color:'var(--txd)'},update:{label:'Update',icon:'↗',color:'var(--txd)'},learning:{label:'Learning',icon:'💡',color:'var(--amb)'},solution:{label:'Solution',icon:'✓',color:'var(--grn)'},note:{label:'Note',icon:'📌',color:'var(--txd)'}};
+const TYPES={task:{label:'Task',icon:'☐',color:'var(--blu)'},action:{label:'Action',icon:'→',color:'var(--ac)'},appointment:{label:'Appointment',icon:'📅',color:'var(--ac)'},log:{label:'Log',icon:'📓',color:'var(--txd)'},update:{label:'Update',icon:'↗',color:'var(--txd)'},learning:{label:'Learning',icon:'💡',color:'var(--amb)'},solution:{label:'Solution',icon:'✓',color:'var(--grn)'},note:{label:'Note',icon:'📌',color:'var(--txd)'}};
 const THTYPES={project:{label:'Project',icon:'🗂️'},problem:{label:'Problem',icon:'🔍'},goal:{label:'Goal',icon:'🎯'},habit:{label:'Habit',icon:'📈'},info:{label:'Reference',icon:'📚'}};
 const STATUSES={active:'Active',watching:'Watching',resolved:'Resolved',archived:'Archived'};
 const DEF_AREAS=[{id:'home',name:'Home',icon:'🏠',description:'Living, household, routines'},{id:'work',name:'Work',icon:'💼',description:'Career, projects, professional life'},{id:'health',name:'Health',icon:'🤸',description:'Body, sleep, food, movement'},{id:'mind',name:'Mind',icon:'🧠',description:'Learning, ideas, mental wellbeing'},{id:'money',name:'Money',icon:'💰',description:'Finances, budgeting, investments'},{id:'people',name:'People',icon:'👥',description:'Relationships, family, community'},{id:'growth',name:'Growth',icon:'🌱',description:'Purpose, faith, personal development'}];
@@ -519,6 +581,7 @@ function navigate(id){
   if(id==='inbox') renderInbox();
   if(id==='life') renderLife();
   if(id==='patterns') renderPatterns();
+  if(id==='calendar'){_calSelectedDate=toStr();_calWeekOffset=0;renderCalendar();}
 }
 function openArea(id){_prevArea=id;renderArea(id);navigate('area');}
 function openThread(id){_curThread=id;renderThread(id);navigate('thread');}
@@ -566,47 +629,64 @@ function submitCapture(){
 }
 
 // ══ VOICE CAPTURE ══
-let _recognition=null,_isRecording=false;
+let _recognition=null,_isRecording=false,_voiceFinal='';
 function toggleVoice(){
   if(_isRecording){stopVoice();}else{startVoice();}
 }
-function startVoice(){
+async function startVoice(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!SR){
     alert('Voice capture requires Chrome or Safari. Your browser does not support it.');
     return;
   }
-  _recognition=new SR();
-  _recognition.continuous=true;
-  _recognition.interimResults=true;
-  _recognition.lang='en-AU';
-  let finalText='';
-  _recognition.onresult=e=>{
-    let interim='';
-    for(let i=e.resultIndex;i<e.results.length;i++){
-      if(e.results[i].isFinal) finalText+=e.results[i][0].transcript+' ';
-      else interim+=e.results[i][0].transcript;
-    }
-    const qc=document.getElementById('qc');
-    qc.value=(finalText+interim).trim();
-    autoResize(qc);
-  };
-  _recognition.onerror=e=>{
-    if(e.error!=='aborted') alert('Voice error: '+e.error);
-    stopVoice();
-  };
-  _recognition.onend=()=>{
-    if(_isRecording) _recognition.start(); // keep alive
-  };
-  _recognition.start();
+  // Request mic permission explicitly first — needed on Android Chrome
+  try{
+    await navigator.mediaDevices.getUserMedia({audio:true});
+  }catch(err){
+    alert('Microphone permission denied. Please allow microphone access and try again.');
+    return;
+  }
   _isRecording=true;
+  _voiceFinal=document.getElementById('qc').value; // preserve any existing text
   document.getElementById('mic-btn').classList.add('recording');
   document.getElementById('mic-btn').textContent='⏹';
   document.getElementById('voice-status').classList.add('on');
+  _startRecognition(SR);
+}
+function _startRecognition(SR){
+  if(!_isRecording) return;
+  _recognition=new SR();
+  _recognition.continuous=false; // Android doesn't support continuous — we restart manually
+  _recognition.interimResults=true;
+  _recognition.lang='en-AU';
+  _recognition.onresult=e=>{
+    let interim='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal) _voiceFinal+=(_voiceFinal?' ':'')+e.results[i][0].transcript.trim();
+      else interim+=e.results[i][0].transcript;
+    }
+    const qc=document.getElementById('qc');
+    qc.value=(_voiceFinal+(interim?' '+interim:'')).trim();
+    autoResize(qc);
+  };
+  _recognition.onerror=e=>{
+    // 'no-speech' and 'aborted' are normal — don't alert, just restart
+    if(e.error==='not-allowed'||e.error==='service-not-allowed'){
+      alert('Microphone access was denied.');
+      stopVoice(); return;
+    }
+    // For other errors (network, audio-capture) restart silently
+    if(_isRecording) setTimeout(()=>_startRecognition(SR),300);
+  };
+  _recognition.onend=()=>{
+    // Restart automatically to simulate continuous mode on Android
+    if(_isRecording) setTimeout(()=>_startRecognition(SR),100);
+  };
+  try{ _recognition.start(); }catch(e){ if(_isRecording) setTimeout(()=>_startRecognition(SR),300); }
 }
 function stopVoice(){
-  if(_recognition){_recognition.abort();_recognition=null;}
   _isRecording=false;
+  if(_recognition){try{_recognition.abort();}catch(e){} _recognition=null;}
   const btn=document.getElementById('mic-btn');
   btn.classList.remove('recording');
   btn.textContent='🎙';
@@ -1042,6 +1122,140 @@ function renderDevNotes(){
   el.innerHTML=html;
 }
 
+// ══ CALENDAR ══
+let _calWeekOffset=0, _calSelectedDate=toStr();
+const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MON_NAMES=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+function getWeekDates(offset){
+  const today=new Date();
+  today.setHours(0,0,0,0);
+  const dow=today.getDay(); // 0=Sun
+  const monday=new Date(today);
+  monday.setDate(today.getDate()-((dow+6)%7)+offset*7);
+  return Array.from({length:7},(_,i)=>{
+    const d=new Date(monday);
+    d.setDate(monday.getDate()+i);
+    return d;
+  });
+}
+function renderCalendar(){
+  const dates=getWeekDates(_calWeekOffset);
+  const first=dates[0], last=dates[6];
+  // Week label
+  const sameMonth=first.getMonth()===last.getMonth();
+  document.getElementById('cal-week-lbl').textContent=sameMonth
+    ?`${first.getDate()}–${last.getDate()} ${MON_NAMES[first.getMonth()]} ${first.getFullYear()}`
+    :`${first.getDate()} ${MON_NAMES[first.getMonth()]} – ${last.getDate()} ${MON_NAMES[last.getMonth()]} ${last.getFullYear()}`;
+  // Gather all scheduled items
+  const allItems=[];
+  db.threads.forEach(t=>(t.entries||[]).forEach(e=>{
+    if((e.type==='task'||e.type==='appointment'||e.type==='action')&&e.dueDate)
+      allItems.push({...e,threadTitle:t.title,threadId:t.id});
+  }));
+  const todayStr=toStr();
+  // Day chips
+  document.getElementById('cal-days').innerHTML=dates.map(d=>{
+    const ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const hasItems=allItems.some(i=>i.dueDate===ds);
+    const isTod=ds===todayStr;
+    const isSel=ds===_calSelectedDate;
+    return `<button class="cal-day-btn ${isTod?'today':''} ${isSel?'selected':''}" onclick="selectCalDay('${ds}')">
+      <span class="cal-day-name">${DAY_NAMES[d.getDay()]}</span>
+      <span class="cal-day-num">${d.getDate()}</span>
+      ${hasItems?`<span class="cal-dot"></span>`:'<span style="width:5px;height:5px;"></span>'}
+    </button>`;
+  }).join('');
+  renderCalDay(_calSelectedDate);
+}
+function selectCalDay(ds){
+  _calSelectedDate=ds;
+  renderCalendar();
+}
+function renderCalDay(ds){
+  const allItems=[];
+  db.threads.forEach(t=>(t.entries||[]).forEach(e=>{
+    if((e.type==='task'||e.type==='appointment'||e.type==='action')&&e.dueDate===ds)
+      allItems.push({...e,threadTitle:t.title,threadId:t.id});
+  }));
+  allItems.sort((a,b)=>{
+    if(a.dueTime&&b.dueTime) return a.dueTime.localeCompare(b.dueTime);
+    if(a.dueTime) return -1; if(b.dueTime) return 1; return 0;
+  });
+  const el=document.getElementById('cal-items');
+  if(!allItems.length){
+    const d=new Date(ds+'T12:00:00');
+    el.innerHTML=`<div class="cal-empty"><div class="cal-empty-ico">📅</div><div style="font-size:14px;">Nothing scheduled for ${DAY_NAMES[d.getDay()]} ${d.getDate()} ${MON_NAMES[d.getMonth()]}</div></div>`;
+    return;
+  }
+  el.innerHTML=allItems.map(e=>`
+    <div class="cal-item ${e.type} ${e.completed?'is-done':''}" onclick="openThread('${e.threadId}')">
+      <div class="cal-item-time">${e.dueTime?fmtTime(e.dueTime):''}</div>
+      <div class="cal-item-body">
+        <div class="cal-item-text">${esc(e.content)}</div>
+        <div class="cal-item-thread">${esc(e.threadTitle)}</div>
+      </div>
+    </div>`).join('');
+}
+function calShift(dir){
+  _calWeekOffset+=dir;
+  renderCalendar();
+}
+
+// ══ NOTIFICATIONS ══
+let _notifTimers=[];
+function renderNotifStatus(){
+  const wrap=document.getElementById('notif-status-wrap');if(!wrap) return;
+  const perm='Notification' in window?Notification.permission:'unsupported';
+  const btn=document.getElementById('notif-req-btn');
+  if(perm==='granted'){
+    wrap.innerHTML=`<div class="notif-status granted">✓ Notifications enabled</div>`;
+    if(btn){btn.textContent='Reschedule Today';btn.onclick=()=>{scheduleNotifications();alert('Notifications rescheduled for today.');};}
+  }else if(perm==='denied'){
+    wrap.innerHTML=`<div class="notif-status denied">✕ Blocked — enable in browser settings</div>`;
+    if(btn){btn.style.display='none';}
+  }else if(perm==='unsupported'){
+    wrap.innerHTML=`<div class="notif-status default">Not supported in this browser</div>`;
+    if(btn){btn.style.display='none';}
+  }else{
+    wrap.innerHTML=`<div class="notif-status default">Not yet enabled</div>`;
+    if(btn){btn.textContent='Enable Notifications';btn.onclick=requestNotifPermission;}
+  }
+}
+async function requestNotifPermission(){
+  if(!('Notification' in window)){alert('Notifications are not supported in this browser.');return;}
+  const perm=await Notification.requestPermission();
+  if(perm==='granted'){scheduleNotifications();}
+  renderNotifStatus();
+}
+function scheduleNotifications(){
+  if(!('Notification' in window)||Notification.permission!=='granted') return;
+  // Clear previous timers
+  _notifTimers.forEach(t=>clearTimeout(t));
+  _notifTimers=[];
+  const todayStr=toStr();
+  const now=Date.now();
+  db.threads.forEach(t=>(t.entries||[]).forEach(e=>{
+    if(!e.dueDate||!e.dueTime||e.completed) return;
+    if((e.type!=='task'&&e.type!=='appointment'&&e.type!=='action')) return;
+    if(e.dueDate!==todayStr) return;
+    const[hh,mm]=e.dueTime.split(':').map(Number);
+    const dueMs=new Date().setHours(hh,mm,0,0);
+    const delay=dueMs-now;
+    if(delay<0) return; // already passed
+    const timer=setTimeout(()=>{
+      try{
+        new Notification('Clarity — '+e.content,{
+          body:t.title+' · '+fmtTime(e.dueTime),
+          icon:document.getElementById('app-touch-icon').href||'',
+          tag:e.id
+        });
+      }catch(err){}
+    },delay);
+    _notifTimers.push(timer);
+  }));
+}
+
 // ══ SETTINGS ══
 function openSettings(){
   document.getElementById('s-name').value=db.settings.name||'';
@@ -1049,6 +1263,7 @@ function openSettings(){
   document.getElementById('th-row').innerHTML=THEMES.map(t=>`<button class="th-btn ${t===db.settings.theme?'on':''}" data-t="${t}" onclick="setTheme('${t}')">${TNAMES[t]}</button>`).join('');
   document.getElementById('ov-settings').classList.add('open');
   renderDevNotes();
+  renderNotifStatus();
 }
 function closeSettings(){document.getElementById('ov-settings').classList.remove('open');}
 function saveSettings(){
@@ -1162,8 +1377,10 @@ function boot(){
     const sw=`self.addEventListener('install',e=>e.waitUntil(caches.open('clarity-v1').then(c=>c.add('/'))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;
     navigator.serviceWorker&&navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
   }catch(e){}
+  // Reschedule notifications when app is brought to foreground
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden) scheduleNotifications();});
   if(!db.settings.name){document.getElementById('ov-setup').classList.add('open');}
-  else{renderHome();badge();}
+  else{renderHome();badge();scheduleNotifications();}
 }
 window.addEventListener('DOMContentLoaded',boot);
 </script>

@@ -1,4 +1,4 @@
-# Clarity — Life Journal · SPEC v1.1
+# Clarity — Life Journal · SPEC v1.2
 
 > **This document is the single source of truth for the Clarity app.**
 > Upload this file alongside `index.html` (and optionally a JSON backup) at the start of every Claude session.
@@ -41,11 +41,11 @@ They should never be merged. The inbox *pattern* is the same, the *content* is d
 
 ### Navigation
 
-- Bottom nav: Home · Inbox · Life · Patterns
+- Bottom nav: Home · Inbox · Calendar · Life · Patterns
 - Settings opens as a full-screen overlay via **gear icon top-right of Home screen** (not in bottom nav)
 - Area detail and Thread detail are sub-screens of Life (no separate nav tabs)
 - Daily Review opens as a full-screen overlay (button on Home screen)
-- Thread detail can be reached from Home (today items), Inbox (after filing), or Life (area or all-threads view)
+- Thread detail can be reached from Home (today items), Inbox (after filing), Calendar (tap item), or Life (area or all-threads view)
 
 ### Organisational Model
 
@@ -70,6 +70,7 @@ They should never be merged. The inbox *pattern* is the same, the *content* is d
 | Type | Icon | Use |
 |---|---|---|
 | Task | ☐ | Something to do, with optional due date — has a completion toggle |
+| Action | → | A specific next step or decision — appears in Calendar if dated, has completion toggle |
 | Appointment | 📅 | Scheduled event — has due date + time, completion toggle |
 | Log | 📓 | Record of something that happened (the source material for pattern detection) |
 | Update | ↗ | Progress note on a project or situation |
@@ -109,12 +110,40 @@ They should never be merged. The inbox *pattern* is the same, the *content* is d
 
 - 🎙 microphone button in the Quick Capture box (left of the Capture button)
 - Uses **Web Speech API** (SpeechRecognition) — no API key required, works in Chrome/Edge/Safari
-- Tap mic to start: button pulses red (⏹), "● Listening…" status appears below textarea
-- Live transcription appears directly in the capture textarea as you speak
+- Tap mic to start: requests microphone permission via `getUserMedia` first (required on Android), then button pulses red (⏹), "● Listening…" status appears below textarea
+- Live transcription appears directly in the capture textarea as you speak; final transcripts accumulate across utterances
 - Tap ⏹ to stop, or tap Capture → to submit — submitting also stops recording
-- If browser does not support SpeechRecognition, shows an alert explaining the limitation
+- **Android Chrome fix**: uses `continuous: false` with automatic restart on `onend` to simulate continuous mode (Android Chrome silently ignores `continuous: true`)
+- `no-speech` and `aborted` errors restart silently; only genuine permission errors alert the user
 - Language: `en-AU` (can be updated in code)
-- Continuous mode: keeps recording until manually stopped
+- If browser does not support SpeechRecognition, shows an alert explaining the limitation
+
+### Calendar
+
+- Accessed via **Calendar** tab in bottom nav (📅)
+- **Week view** — opens on current week, always defaults to today's date selected
+- 7 day chips (Mon–Sun) across the top — tap any day to see that day's items
+- ← → navigation between weeks; week label shows date range (e.g. "10–16 Mar 2026")
+- Dot indicator on days that have scheduled items
+- Today chip highlighted in accent colour; selected day filled solid
+- Items shown below the day chips, sorted by time (untimed items last)
+- Each item shows: time (if set), entry text, thread name
+- Colour-coded left border: Task = blue, Action = accent, Appointment = green
+- Completed items shown struck-through at reduced opacity
+- Tapping an item opens its parent thread
+- Shows **Task**, **Action**, and **Appointment** entry types that have a `dueDate` set
+
+### Notifications
+
+- Permission requested via **Notifications** section in Settings
+- Once granted: on each app open and each `visibilitychange` (app brought to foreground), `scheduleNotifications()` runs
+- Scans today's Task, Action, and Appointment entries with a `dueTime` that haven't been completed
+- Schedules a `setTimeout` browser notification for each, firing at the exact due time
+- Notification title = entry content; body = thread name + formatted time
+- Previous timers cleared and rescheduled each time to avoid duplicates
+- **Limitation**: fires only while the app is open or running as an installed PWA in the background — no push server, no server-side scheduling
+- If permission is denied, Settings shows a clear message to enable in browser settings
+- "Reschedule Today" button appears once granted — useful after adding new timed items mid-day
 
 ### AI Layer
 
@@ -172,9 +201,10 @@ threads: [{
 
 entries: [{
   id, type, content,
+  // type: 'task' | 'action' | 'appointment' | 'log' | 'update' | 'learning' | 'solution' | 'note'
   dueDate,        // YYYY-MM-DD or null
   dueTime,        // HH:MM or null
-  completed,      // bool — for task and appointment types
+  completed,      // bool — for task, action, and appointment types
   editedAt,       // optional timestamp of last edit
   createdAt
 }]
@@ -202,13 +232,14 @@ devNotes: [{
 |---|---|---|
 | Home | Nav: Home | Greeting, quick capture (with voice), today items, inbox preview, daily review |
 | Inbox | Nav: Inbox | Unprocessed captures — AI process or file manually |
+| Calendar | Nav: Calendar | Week view of scheduled tasks, actions, and appointments |
 | Life — By Area | Nav: Life | 2-column grid of 7 life areas |
 | Life — All Threads | Nav: Life → All Threads tab | Flat list of all threads, area tags shown |
 | Area Detail | Tap any area card | Threads within that area, grouped active/resolved |
 | Thread Detail | Tap any thread | Entry thread + AI summary + add/edit entries |
 | Patterns | Nav: Patterns | User-recorded patterns + AI analysis of log entries |
 | Daily Review | Home button | 3-step guided overlay |
-| Settings | Gear icon on Home | Name, API key, theme selection, dev notes, export/import |
+| Settings | Gear icon on Home | Name, API key, theme, notifications, dev notes, export/import |
 | Setup | First launch | Name + optional API key |
 
 ---
@@ -293,34 +324,33 @@ Sits alongside Covenant as a sister repo on the same GitHub account. No conflict
 | Version | Date | Change |
 |---|---|---|
 | v1.0 | 2026-03-15 | Initial build: quick capture, inbox with AI processing, 7 life areas, threads (5 types), entries (7 types), task/appointment completion toggles, today view on home, By Area + All Threads views, pattern recording + AI analysis, daily review overlay, AI entry assist, AI thread summaries, 5 themes (Forest/Cloud/Ocean/Dawn/Stone), export/import JSON, PWA |
-| v1.1 | 2026-03-15 | Dev notes in Settings (checkbox archive, collapsible archived section, inline edit); voice capture via Web Speech API (live transcription into capture box, pulsing mic button, en-AU locale) |
+| v1.1 | 2026-03-15 | Dev notes in Settings (checkbox archive, collapsible archived section, inline edit); voice capture via Web Speech API (live transcription, pulsing mic button, en-AU locale); Android Chrome voice fix (continuous:false + auto-restart); Action entry type; modal X close button |
+| v1.2 | 2026-03-15 | Calendar week view (nav tab, day chips, week navigation, colour-coded items, dot indicators); browser notifications (permission flow in Settings, setTimeout scheduling on boot and visibility change, reschedule button) |
 
 ---
 
 ## Known Limitations
 
 - No cross-device sync (data stays on one browser/device)
-- No calendar view — due dates on tasks/appointments but no month/week grid
 - No search across threads and entries
 - No recurring tasks
 - Pattern analysis requires manual trigger — not automatic
 - Areas cannot be renamed or reordered in v1
 - Service worker Blob URL may not persist after page close on some browsers
+- Notifications only fire while app is open or running as installed PWA — no push server
 
 ---
 
 ## Planned Features
 
 - [ ] Search across all threads and entries
-- [ ] Calendar / week view for tasks and appointments
 - [ ] Recurring tasks (daily, weekly)
 - [ ] Automatic pattern suggestions after N log entries
 - [ ] Rename and reorder life areas
 - [ ] Thread linking (e.g. a Problem thread linked to a Health area Goal)
 - [ ] Weekly summary (AI-generated overview of the week's logs and progress)
 - [ ] Export as formatted PDF or Markdown
-- [ ] Reminders / notifications for due tasks (requires PWA notification permission)
 
 ---
 
-*Clarity SPEC v1.1 — Built with Claude Sonnet, March 2026*
+*Clarity SPEC v1.2 — Built with Claude Sonnet, March 2026*
