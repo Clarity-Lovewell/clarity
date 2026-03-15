@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Clarity — Life Journal</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clarity">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0e0a06">
+<link id="app-touch-icon" rel="apple-touch-icon" href="">
+<link rel="manifest" href='data:application/manifest+json,{"name":"Clarity","short_name":"Clarity","display":"standalone","background_color":"%230e0a06","theme_color":"%230e0a06","start_url":"."}'>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+/* ══ THEMES ══ */
+:root,[data-theme="forest"]{
+  --bg:#0e0a06;--sf:#17110a;--sf2:#211810;--sf3:#2b2016;
+  --ac:#5a9a68;--acd:#3a6a45;--acf:rgba(90,154,104,.11);
+  --tx:#e8e0d0;--txd:#9a8e78;--mu:#5a5040;
+  --br:rgba(90,154,104,.13);--brs:rgba(90,154,104,.30);
+  --red:#c87070;--amb:#c8902a;--blu:#7898c0;--grn:#5a9a68;
+  --gl1:rgba(90,154,104,.05);--gl2:rgba(60,90,50,.04);
+  --nav-bg:rgba(14,10,6,.97);
+}
+[data-theme="cloud"]{
+  --bg:#f7f3ee;--sf:#fffcf8;--sf2:#ede8e0;--sf3:#e0d9ce;
+  --ac:#6a5040;--acd:#4a3828;--acf:rgba(106,80,64,.09);
+  --tx:#1e1610;--txd:#6a5848;--mu:#a09080;
+  --br:rgba(106,80,64,.14);--brs:rgba(106,80,64,.32);
+  --red:#b04040;--amb:#8a5a10;--blu:#3a5a8a;--grn:#3a6a48;
+  --gl1:rgba(106,80,64,.04);--gl2:rgba(106,80,64,.02);
+  --nav-bg:rgba(247,243,238,.97);
+}
+[data-theme="ocean"]{
+  --bg:#060c18;--sf:#0c1528;--sf2:#121e38;--sf3:#1a2848;
+  --ac:#38c8e8;--acd:#1a7a9a;--acf:rgba(56,200,232,.10);
+  --tx:#d8eef8;--txd:#7aaac8;--mu:#3a6080;
+  --br:rgba(56,200,232,.11);--brs:rgba(56,200,232,.30);
+  --red:#e07090;--amb:#d4a050;--blu:#38c8e8;--grn:#60d890;
+  --gl1:rgba(56,200,232,.05);--gl2:rgba(56,200,232,.02);
+  --nav-bg:rgba(6,12,24,.97);
+}
+[data-theme="dawn"]{
+  --bg:#faf7ff;--sf:#fff;--sf2:#f0eaff;--sf3:#e4daff;
+  --ac:#7a50c0;--acd:#5a30a0;--acf:rgba(122,80,192,.09);
+  --tx:#1a1028;--txd:#6050a0;--mu:#9a90c0;
+  --br:rgba(122,80,192,.14);--brs:rgba(122,80,192,.32);
+  --red:#b04060;--amb:#8a6010;--blu:#4060b0;--grn:#40906a;
+  --gl1:rgba(122,80,192,.04);--gl2:rgba(122,80,192,.02);
+  --nav-bg:rgba(250,247,255,.97);
+}
+[data-theme="stone"]{
+  --bg:#111010;--sf:#1c1a1a;--sf2:#252222;--sf3:#2f2c2c;
+  --ac:#c89848;--acd:#906820;--acf:rgba(200,152,72,.11);
+  --tx:#f0ece4;--txd:#a89880;--mu:#686058;
+  --br:rgba(200,152,72,.12);--brs:rgba(200,152,72,.28);
+  --red:#c87070;--amb:#c89848;--blu:#7898c0;--grn:#70b880;
+  --gl1:rgba(200,152,72,.04);--gl2:rgba(200,152,72,.02);
+  --nav-bg:rgba(17,16,16,.97);
+}
+
+/* ══ BASE ══ */
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--tx);font-family:'DM Sans',system-ui,sans-serif;font-size:16px;line-height:1.65;min-height:100dvh;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 0%,var(--gl1) 0%,transparent 55%),radial-gradient(ellipse at 80% 100%,var(--gl2) 0%,transparent 50%);pointer-events:none;z-index:0;}
+.app{max-width:680px;margin:0 auto;padding:0 18px;position:relative;z-index:1;}
+h1,h2,h3,h4{font-family:'DM Serif Display',Georgia,serif;}
+
+/* ══ NAV ══ */
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--nav-bg);border-top:1px solid var(--br);display:flex;justify-content:space-around;padding:7px 0 max(14px,env(safe-area-inset-bottom));z-index:100;backdrop-filter:blur(18px);}
+.nav-btn{background:none;border:none;color:var(--mu);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 12px;transition:color .2s;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;}
+.nav-btn .ico{font-size:19px;line-height:1;}
+.nav-btn.active{color:var(--ac);}
+.nav-btn:hover{color:var(--txd);}
+.nav-badge{position:absolute;top:-2px;right:-4px;background:var(--ac);color:var(--bg);border-radius:10px;padding:0 5px;font-size:9px;font-weight:700;display:none;font-family:'DM Sans',sans-serif;}
+.nav-ib{position:relative;display:inline-block;}
+
+/* ══ SCREENS ══ */
+.screen{display:none;padding:20px 0 130px;animation:fadeUp .25s ease forwards;}
+.screen.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ══ HEADER ══ */
+.screen-header{display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-top:8px;}
+.back-btn{background:none;border:1px solid var(--br);color:var(--ac);cursor:pointer;font-size:15px;padding:6px 10px;border-radius:8px;transition:all .18s;flex-shrink:0;}
+.back-btn:hover{border-color:var(--brs);background:var(--sf);}
+.screen-title{font-family:'DM Serif Display',Georgia,serif;font-size:24px;color:var(--tx);flex:1;font-weight:400;}
+
+/* ══ CARDS ══ */
+.card{background:var(--sf);border:1px solid var(--br);border-radius:13px;padding:18px;margin-bottom:12px;}
+.card.click{cursor:pointer;transition:all .18s;}
+.card.click:hover{border-color:var(--brs);background:var(--sf2);}
+
+/* ══ BADGES ══ */
+.badge{display:inline-flex;align-items:center;gap:4px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:.04em;padding:3px 9px;border-radius:20px;white-space:nowrap;}
+.b-type{background:var(--acf);color:var(--ac);border:1px solid var(--br);}
+.b-area{background:var(--sf2);color:var(--txd);border:1px solid var(--br);}
+.b-active{background:rgba(90,154,104,.12);color:var(--grn);border:1px solid rgba(90,154,104,.2);}
+[data-theme="ocean"] .b-active{background:rgba(60,216,144,.12);color:var(--grn);border:1px solid rgba(60,216,144,.2);}
+[data-theme="dawn"] .b-active{background:rgba(64,144,106,.12);color:var(--grn);border:1px solid rgba(64,144,106,.2);}
+[data-theme="stone"] .b-active{background:rgba(112,184,128,.12);color:var(--grn);border:1px solid rgba(112,184,128,.2);}
+[data-theme="cloud"] .b-active{background:rgba(58,106,72,.12);color:var(--grn);border:1px solid rgba(58,106,72,.2);}
+.b-watching{background:rgba(200,144,42,.12);color:var(--amb);border:1px solid rgba(200,144,42,.2);}
+.b-resolved,.b-archived{background:var(--sf2);color:var(--mu);border:1px solid var(--br);}
+
+/* ══ BUTTONS ══ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:9px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;font-size:14px;padding:10px 18px;transition:all .18s;white-space:nowrap;}
+.btn-p{background:var(--ac);color:#fff;}
+[data-theme="cloud"] .btn-p{color:#fff;}
+[data-theme="dawn"] .btn-p{color:#fff;}
+.btn-p:hover{filter:brightness(1.08);}
+.btn-g{background:transparent;border:1px solid var(--br);color:var(--ac);}
+.btn-g:hover{border-color:var(--brs);background:var(--acf);}
+.btn-d{background:var(--sf2);border:1px solid var(--br);color:var(--txd);}
+.btn-d:hover{background:var(--sf3);color:var(--tx);}
+.btn-del{background:rgba(200,112,112,.10);border:1px solid rgba(200,112,112,.2);color:var(--red);}
+.btn-del:hover{background:rgba(200,112,112,.18);}
+.btn-w{width:100%;}
+.btn-s{font-size:13px;padding:7px 14px;border-radius:8px;}
+.btn-xs{font-size:12px;padding:0;background:none;border:none;cursor:pointer;color:var(--mu);font-family:'DM Sans',sans-serif;transition:color .15s;}
+.btn-xs:hover{color:var(--red);}
+
+/* ══ FORMS ══ */
+.field{margin-bottom:14px;}
+.field label,.flbl{display:block;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);margin-bottom:6px;}
+textarea,input[type=text],input[type=password],input[type=date],input[type=time],select{width:100%;background:var(--sf2);border:1px solid var(--br);border-radius:9px;padding:10px 14px;color:var(--tx);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.5;resize:vertical;transition:border-color .18s;outline:none;-webkit-appearance:none;}
+textarea:focus,input:focus,select:focus{border-color:var(--ac);background:var(--sf);}
+textarea::placeholder,input::placeholder{color:var(--mu);}
+select option{background:var(--sf2);color:var(--tx);}
+
+/* ══ HOME TOP BAR ══ */
+.home-bar{display:flex;align-items:flex-start;justify-content:space-between;padding-top:10px;margin-bottom:18px;}
+.home-greet{font-family:'DM Serif Display',Georgia,serif;font-size:27px;font-weight:400;color:var(--tx);line-height:1.15;}
+.home-date{font-size:13px;color:var(--mu);margin-top:3px;}
+.gear-btn{background:none;border:1px solid var(--br);color:var(--mu);cursor:pointer;font-size:17px;padding:7px 9px;border-radius:9px;line-height:1;transition:all .18s;flex-shrink:0;margin-top:2px;}
+.gear-btn:hover{border-color:var(--brs);color:var(--tx);}
+
+/* ══ QUICK CAPTURE ══ */
+.qc{background:var(--sf);border:1.5px solid var(--br);border-radius:14px;padding:15px;margin-bottom:22px;transition:border-color .2s,box-shadow .2s;}
+.qc:focus-within{border-color:var(--ac);box-shadow:0 0 0 3px var(--acf);}
+.qc-ta{background:transparent;border:none;padding:0;border-radius:0;font-size:16px;min-height:50px;resize:none;line-height:1.55;width:100%;outline:none;color:var(--tx);font-family:'DM Sans',sans-serif;}
+.qc-foot{display:flex;justify-content:space-between;align-items:center;margin-top:9px;}
+.qc-hint{font-size:12px;color:var(--mu);}
+
+/* ══ SECTION TITLE ══ */
+.sec{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+.sec-lnk{color:var(--ac);cursor:pointer;}
+
+/* ══ TODAY ITEMS ══ */
+.t-item{display:flex;align-items:flex-start;gap:12px;padding:11px 15px;background:var(--sf);border:1px solid var(--br);border-radius:12px;margin-bottom:8px;cursor:pointer;transition:all .18s;}
+.t-item:hover{border-color:var(--brs);background:var(--sf2);}
+.t-item.task{border-left:3px solid var(--blu);}
+.t-item.appt{border-left:3px solid var(--ac);}
+.t-item.done-i{opacity:.42;}
+.t-chk{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--br);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;transition:all .18s;margin-top:3px;background:none;color:transparent;}
+.t-chk:hover{border-color:var(--ac);}
+.t-chk.on{border-color:var(--ac);background:var(--ac);color:#fff;}
+.t-text{font-size:15px;color:var(--tx);line-height:1.4;}
+.t-item.done-i .t-text{text-decoration:line-through;color:var(--txd);}
+.t-meta{font-size:12px;color:var(--mu);margin-top:2px;}
+
+/* ══ INBOX ══ */
+.ii{background:var(--sf);border:1px solid var(--br);border-radius:13px;padding:16px;margin-bottom:12px;}
+.ii-meta{font-size:12px;color:var(--mu);margin-bottom:8px;}
+.ii-text{font-size:15px;color:var(--tx);line-height:1.55;margin-bottom:12px;}
+.ii-acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.ai-block{background:var(--sf2);border:1px solid var(--br);border-radius:11px;padding:14px;margin-top:12px;}
+.ai-lbl{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ac);margin-bottom:8px;}
+.ai-orig{font-size:13px;color:var(--txd);font-style:italic;margin-bottom:8px;line-height:1.5;}
+.ai-arr{color:var(--ac);margin:5px 0;font-size:13px;}
+.ai-why{font-size:12px;color:var(--txd);margin-top:8px;font-style:italic;}
+
+/* ══ LIFE TABS ══ */
+.life-tabs{display:flex;gap:6px;margin-bottom:20px;}
+.life-tab{padding:7px 16px;border-radius:20px;border:1px solid var(--br);background:transparent;color:var(--mu);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;transition:all .18s;}
+.life-tab.on{background:var(--acf);border-color:var(--brs);color:var(--ac);}
+
+/* ══ AREA GRID ══ */
+.ag{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.ac-card{background:var(--sf);border:1px solid var(--br);border-radius:13px;padding:16px;cursor:pointer;transition:all .18s;}
+.ac-card:hover{border-color:var(--brs);background:var(--sf2);transform:translateY(-1px);}
+.ac-icon{font-size:24px;margin-bottom:8px;}
+.ac-name{font-family:'DM Serif Display',Georgia,serif;font-size:16px;color:var(--tx);margin-bottom:3px;}
+.ac-desc{font-size:12px;color:var(--txd);line-height:1.4;}
+.ac-cnt{font-size:11px;color:var(--ac);margin-top:8px;font-weight:500;}
+
+/* ══ THREAD CARDS ══ */
+.tc{background:var(--sf);border:1px solid var(--br);border-radius:13px;padding:16px;margin-bottom:10px;cursor:pointer;transition:all .18s;}
+.tc:hover{border-color:var(--brs);background:var(--sf2);}
+.tc-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;}
+.tc-title{font-family:'DM Serif Display',Georgia,serif;font-size:17px;color:var(--tx);flex:1;font-weight:400;}
+.tc-area{font-size:12px;color:var(--mu);margin-top:4px;}
+.tc-bots{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+
+/* ══ THREAD DETAIL ══ */
+.td-hd{margin-bottom:18px;padding-top:8px;}
+.td-hd-top{display:flex;align-items:flex-start;gap:10px;}
+.td-title{font-family:'DM Serif Display',Georgia,serif;font-size:24px;color:var(--tx);flex:1;line-height:1.2;font-weight:400;}
+.td-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.td-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+
+/* ══ ENTRIES ══ */
+.ew{background:var(--sf);border:1px solid var(--br);border-radius:13px;padding:16px;}
+.er{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--br);}
+.er:last-child{border-bottom:none;padding-bottom:0;}
+.e-icon{width:28px;height:28px;border-radius:7px;background:var(--sf2);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.e-tog{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--br);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;background:none;color:transparent;font-size:10px;transition:all .18s;margin-top:4px;}
+.e-tog:hover{border-color:var(--ac);}
+.e-tog.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.e-body{flex:1;}
+.e-text{font-size:15px;color:var(--tx);line-height:1.5;}
+.e-text.struck{text-decoration:line-through;color:var(--txd);}
+.e-due{font-size:12px;color:var(--ac);margin-top:3px;}
+.e-mr{font-size:12px;color:var(--mu);margin-top:5px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.e-tlbl{font-size:11px;font-weight:500;}
+.e-edit{background:none;border:none;cursor:pointer;font-size:12px;color:var(--mu);font-family:'DM Sans',sans-serif;transition:color .15s;}
+.e-edit:hover{color:var(--ac);}
+.e-del{background:none;border:none;cursor:pointer;font-size:12px;color:var(--mu);font-family:'DM Sans',sans-serif;transition:color .15s;}
+.e-del:hover{color:var(--red);}
+.add-dash{border:1.5px dashed var(--br);border-radius:11px;padding:12px;text-align:center;cursor:pointer;color:var(--mu);font-size:13px;transition:all .18s;margin-top:10px;}
+.add-dash:hover{border-color:var(--ac);color:var(--ac);}
+
+/* ══ SUMMARY ══ */
+.sum-card{background:var(--acf);border:1px solid var(--br);border-radius:13px;padding:16px;margin-bottom:12px;}
+.sum-lbl{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ac);margin-bottom:6px;}
+.sum-text{font-size:15px;color:var(--txd);line-height:1.7;font-style:italic;}
+
+/* ══ PATTERNS ══ */
+.pat-card{background:var(--sf);border:1px solid var(--br);border-radius:13px;padding:16px;margin-bottom:10px;}
+.pat-text{font-size:15px;color:var(--tx);line-height:1.55;margin-bottom:8px;}
+
+/* ══ MODAL ══ */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px);}
+.mo.open{display:flex;animation:fadeIn .18s ease;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.mo-box{background:var(--sf);border:1px solid var(--brs);border-radius:20px 20px 0 0;padding:24px 20px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;animation:slideUp .22s ease;}
+@keyframes slideUp{from{transform:translateY(20px);}to{transform:translateY(0);}}
+.mo-title{font-family:'DM Serif Display',Georgia,serif;font-size:20px;color:var(--tx);margin-bottom:18px;font-weight:400;}
+
+/* ══ OVERLAYS ══ */
+.ov{position:fixed;inset:0;background:var(--bg);z-index:150;display:none;overflow-y:auto;}
+.ov.open{display:block;animation:fadeUp .22s ease;}
+.ov-inner{max-width:680px;margin:0 auto;padding:24px 18px 80px;}
+.ov-head{display:flex;align-items:center;gap:12px;margin-bottom:28px;}
+.ov-title{font-family:'DM Serif Display',Georgia,serif;font-size:26px;color:var(--tx);flex:1;font-weight:400;}
+.x-btn{background:none;border:1px solid var(--br);color:var(--txd);cursor:pointer;font-size:16px;padding:7px 11px;border-radius:8px;transition:all .18s;}
+.x-btn:hover{border-color:var(--brs);color:var(--tx);}
+.s-sec{margin-bottom:28px;}
+.s-sec-t{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);margin-bottom:12px;}
+
+/* ══ REVIEW ══ */
+.rv-step{background:var(--sf);border:1px solid var(--br);border-radius:14px;padding:20px;margin-bottom:14px;}
+.rv-num{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);margin-bottom:4px;}
+.rv-ttl{font-family:'DM Serif Display',Georgia,serif;font-size:20px;color:var(--tx);margin-bottom:12px;font-weight:400;}
+.note-row{position:relative;margin-bottom:8px;}
+.note-rm{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--mu);cursor:pointer;font-size:18px;line-height:1;}
+.note-rm:hover{color:var(--red);}
+
+/* ══ PILLS ══ */
+.pill-g{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.pill{padding:5px 12px;border-radius:20px;border:1px solid var(--br);background:var(--sf2);color:var(--txd);cursor:pointer;font-size:12px;font-weight:500;transition:all .15s;}
+.pill.on{border-color:var(--ac);color:var(--ac);background:var(--acf);}
+
+/* ══ THEME BUTTONS ══ */
+.th-row{display:flex;gap:8px;flex-wrap:wrap;}
+.th-btn{padding:8px 14px;border-radius:8px;border:1px solid var(--br);background:var(--sf2);color:var(--txd);cursor:pointer;font-size:13px;font-weight:500;transition:all .18s;}
+.th-btn.on{border-color:var(--ac);color:var(--ac);background:var(--acf);}
+
+/* ══ EMPTY ══ */
+.empty{text-align:center;padding:40px 20px;color:var(--txd);}
+.empty-ico{font-size:36px;margin-bottom:12px;}
+.empty-ttl{font-family:'DM Serif Display',Georgia,serif;font-size:18px;color:var(--tx);margin-bottom:6px;font-weight:400;}
+.empty-txt{font-size:14px;line-height:1.6;}
+
+/* ══ MISC ══ */
+.div{height:1px;background:var(--br);margin:16px 0;}
+.mt8{margin-top:8px;}.mt12{margin-top:12px;}.mt16{margin-top:16px;}
+.mb8{margin-bottom:8px;}.mb12{margin-bottom:12px;}.mb16{margin-bottom:16px;}
+.fb{display:flex;justify-content:space-between;align-items:center;}
+</style>
+</head>
+<body data-theme="forest">
+
+<!-- SETUP -->
+<div class="ov" id="ov-setup">
+  <div class="ov-inner" style="display:flex;flex-direction:column;justify-content:center;min-height:100vh;max-width:460px;">
+    <div style="margin-bottom:36px;">
+      <div style="font-size:38px;margin-bottom:16px;">◈</div>
+      <h1 style="font-family:'DM Serif Display',Georgia,serif;font-size:36px;font-weight:400;margin-bottom:10px;">Clarity</h1>
+      <p style="color:var(--txd);font-size:16px;line-height:1.7;">Your life journal — capture everything, find patterns, move forward with intention.</p>
+    </div>
+    <div class="field"><label>Your name</label><input id="su-name" type="text" placeholder="Chris" autocomplete="off"></div>
+    <div class="field"><label>Anthropic API key <span style="font-weight:400;text-transform:none;font-size:12px;color:var(--mu);">(optional — enables AI features)</span></label><input id="su-key" type="password" placeholder="sk-ant-…"></div>
+    <button class="btn btn-p btn-w" style="margin-top:6px;" onclick="completeSetup()">Begin with Clarity →</button>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="ov" id="ov-settings">
+  <div class="ov-inner">
+    <div class="ov-head"><div class="ov-title">Settings</div><button class="x-btn" onclick="closeSettings()">✕</button></div>
+    <div class="s-sec">
+      <div class="s-sec-t">Profile</div>
+      <div class="field"><label>Name</label><input id="s-name" type="text"></div>
+      <div class="field"><label>Anthropic API key</label><input id="s-key" type="password" placeholder="sk-ant-…"></div>
+      <button class="btn btn-p" onclick="saveSettings()">Save</button>
+    </div>
+    <div class="s-sec"><div class="s-sec-t">Appearance</div><div class="th-row" id="th-row"></div></div>
+    <div class="s-sec">
+      <div class="s-sec-t">Data</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-g btn-s" onclick="exportData()">Export JSON</button>
+        <label class="btn btn-d btn-s" style="cursor:pointer;">Import JSON<input type="file" accept=".json" style="display:none;" onchange="importData(event)"></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DAILY REVIEW -->
+<div class="ov" id="ov-review">
+  <div class="ov-inner">
+    <div class="ov-head"><div class="ov-title">Daily Review</div><button class="x-btn" onclick="closeReview()">✕</button></div>
+    <div id="rv-body"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="mo" id="modal" onclick="maybeClose(event)">
+  <div class="mo-box">
+    <div class="mo-title" id="mo-title"></div>
+    <div id="mo-body"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app">
+
+  <!-- HOME -->
+  <div class="screen active" id="screen-home">
+    <div class="home-bar">
+      <div>
+        <div class="home-greet" id="h-greeting"></div>
+        <div class="home-date" id="h-date"></div>
+      </div>
+      <button class="gear-btn" onclick="openSettings()">⚙</button>
+    </div>
+    <div class="qc">
+      <textarea class="qc-ta" id="qc" rows="2" placeholder="Capture a thought, task, appointment, or anything on your mind…" onkeydown="handleQCKey(event)" oninput="autoResize(this)"></textarea>
+      <div class="qc-foot">
+        <span class="qc-hint">⌘ Enter to capture</span>
+        <button class="btn btn-p btn-s" onclick="submitCapture()">Capture →</button>
+      </div>
+    </div>
+    <div id="h-today"></div>
+    <div id="h-inbox"></div>
+    <div style="text-align:center;margin-top:18px;">
+      <button class="btn btn-g btn-s" onclick="openReview()">✦ Daily Review</button>
+    </div>
+  </div>
+
+  <!-- INBOX -->
+  <div class="screen" id="screen-inbox">
+    <div class="fb" style="margin-bottom:22px;padding-top:8px;">
+      <h2 class="screen-title" style="margin:0;font-size:26px;">Inbox</h2>
+      <span id="ib-count" style="font-size:13px;color:var(--txd);"></span>
+    </div>
+    <div id="ib-list"></div>
+  </div>
+
+  <!-- LIFE -->
+  <div class="screen" id="screen-life">
+    <div style="padding-top:8px;margin-bottom:18px;" class="fb">
+      <h2 class="screen-title" style="margin:0;font-size:26px;">Your Life</h2>
+    </div>
+    <div class="life-tabs">
+      <button class="life-tab on" id="lt-areas" onclick="setLifeTab('areas')">By Area</button>
+      <button class="life-tab" id="lt-all" onclick="setLifeTab('all')">All Threads</button>
+    </div>
+    <div id="life-view"></div>
+  </div>
+
+  <!-- AREA DETAIL -->
+  <div class="screen" id="screen-area">
+    <div class="screen-header">
+      <button class="back-btn" onclick="navigate('life')">←</button>
+      <div class="screen-title" id="a-title"></div>
+      <button class="btn btn-p btn-s" id="a-new">+ Thread</button>
+    </div>
+    <div id="a-threads"></div>
+  </div>
+
+  <!-- THREAD DETAIL -->
+  <div class="screen" id="screen-thread">
+    <div class="td-hd">
+      <div class="td-hd-top">
+        <button class="back-btn" onclick="goBack()">←</button>
+        <div class="td-title" id="td-title"></div>
+      </div>
+      <div class="td-meta" id="td-meta"></div>
+      <div class="td-acts" id="td-acts"></div>
+    </div>
+    <div id="td-sum"></div>
+    <div class="ew" id="td-entries"></div>
+    <div class="add-dash" id="td-add-bot">+ Add Entry</div>
+  </div>
+
+  <!-- PATTERNS -->
+  <div class="screen" id="screen-patterns">
+    <div style="padding-top:8px;margin-bottom:20px;">
+      <h2 class="screen-title" style="margin-bottom:5px;font-size:26px;">Patterns</h2>
+      <div style="font-size:14px;color:var(--txd);">Insights you've noticed — and ones AI spots in your logs</div>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;">
+      <button class="btn btn-g btn-s" id="ai-an-btn" onclick="analysePatterns()">✦ AI Analyse</button>
+      <button class="btn btn-d btn-s" onclick="showAddPattern()">+ Record Pattern</button>
+    </div>
+    <div id="ai-analysis"></div>
+    <div id="pat-list"></div>
+  </div>
+
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-btn active" id="nav-home" onclick="navigate('home')"><span class="ico">⌂</span>Home</button>
+  <button class="nav-btn" id="nav-inbox" onclick="navigate('inbox')">
+    <div class="nav-ib"><span class="ico">⚡</span><span class="nav-badge" id="nb"></span></div>Inbox
+  </button>
+  <button class="nav-btn" id="nav-life" onclick="navigate('life')"><span class="ico">◈</span>Life</button>
+  <button class="nav-btn" id="nav-patterns" onclick="navigate('patterns')"><span class="ico">✦</span>Patterns</button>
+</nav>
+
+<script>
+// ══ CONSTANTS ══
+const TYPES = {
+  task:        {label:'Task',       icon:'☐',color:'var(--blu)'},
+  appointment: {label:'Appointment',icon:'📅',color:'var(--ac)'},
+  log:         {label:'Log',        icon:'📓',color:'var(--txd)'},
+  update:      {label:'Update',     icon:'↗', color:'var(--txd)'},
+  learning:    {label:'Learning',   icon:'💡',color:'var(--amb)'},
+  solution:    {label:'Solution',   icon:'✓', color:'var(--grn)'},
+  note:        {label:'Note',       icon:'📌',color:'var(--txd)'},
+};
+const THTYPES = {
+  project:{label:'Project',  icon:'🗂️'},
+  problem:{label:'Problem',  icon:'🔍'},
+  goal:   {label:'Goal',     icon:'🎯'},
+  habit:  {label:'Habit',    icon:'📈'},
+  info:   {label:'Reference',icon:'📚'},
+};
+const STATUSES = {active:'Active',watching:'Watching',resolved:'Resolved',archived:'Archived'};
+const DEF_AREAS = [
+  {id:'home',   name:'Home',    icon:'🏠',description:'Living, household, routines'},
+  {id:'work',   name:'Work',    icon:'💼',description:'Career, projects, professional life'},
+  {id:'health', name:'Health',  icon:'🤸',description:'Body, sleep, food, movement'},
+  {id:'mind',   name:'Mind',    icon:'🧠',description:'Learning, ideas, mental wellbeing'},
+  {id:'money',  name:'Money',   icon:'💰',description:'Finances, budgeting, investments'},
+  {id:'people', name:'People',  icon:'👥',description:'Relationships, family, community'},
+  {id:'growth', name:'Growth',  icon:'🌱',description:'Purpose, faith, personal development'},
+];
+const THEMES = ['forest','cloud','ocean','dawn','stone'];
+const TNAMES = {forest:'Forest',cloud:'Cloud',ocean:'Ocean',dawn:'Dawn',stone:'Stone'};
+
+// ══ DB ══
+let db;
+const DB_KEY = 'clarity_v1';
+function persist(){ localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+function loadDB(){
+  const r = localStorage.getItem(DB_KEY);
+  db = r ? JSON.parse(r) : {settings:{name:'',apiKey:'',theme:'forest'},areas:DEF_AREAS.map(a=>({...a})),threads:[],inbox:[],patterns:[]};
+  if(!db.patterns) db.patterns=[];
+  if(!db.areas||!db.areas.length) db.areas=DEF_AREAS.map(a=>({...a}));
+}
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function esc(s){ const d=document.createElement('div');d.textContent=String(s||'');return d.innerHTML; }
+function toStr(){ return new Date().toISOString().split('T')[0]; }
+function fmtDate(ts){
+  const d=new Date(ts),now=new Date(),diff=Math.floor((now-d)/86400000);
+  if(diff===0) return 'Today, '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  if(diff===1) return 'Yesterday';
+  if(diff<7) return d.toLocaleDateString([],{weekday:'long'});
+  return d.toLocaleDateString([],{day:'numeric',month:'short',year:'numeric'});
+}
+function fmtTime(t){
+  if(!t) return '';
+  const [h,m]=t.split(':').map(Number);
+  return `${h%12||12}:${m.toString().padStart(2,'0')} ${h>=12?'pm':'am'}`;
+}
+
+// ══ NAV ══
+let _prevArea=null, _curThread=null, _lifeTab='areas';
+function navigate(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const s=document.getElementById('screen-'+id); if(s) s.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const nb=document.getElementById('nav-'+id); if(nb) nb.classList.add('active');
+  if(id==='area'||id==='thread') document.getElementById('nav-life').classList.add('active');
+  if(id==='home') renderHome();
+  if(id==='inbox') renderInbox();
+  if(id==='life') renderLife();
+  if(id==='patterns') renderPatterns();
+}
+function openArea(id){ _prevArea=id; renderArea(id); navigate('area'); }
+function openThread(id){ _curThread=id; renderThread(id); navigate('thread'); }
+function goBack(){ if(_prevArea) navigate('area'); else navigate('life'); }
+function badge(){
+  const n=db.inbox.filter(i=>!i.processed).length;
+  const b=document.getElementById('nb'); b.textContent=n; b.style.display=n?'block':'none';
+}
+function autoResize(el){ el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
+
+// ══ HOME ══
+function renderHome(){
+  const h=new Date().getHours(), n=db.settings.name?', '+db.settings.name:'';
+  document.getElementById('h-greeting').textContent = h<12?'Good morning'+n:h<17?'Good afternoon'+n:'Good evening'+n;
+  document.getElementById('h-date').textContent = new Date().toLocaleDateString([],{weekday:'long',day:'numeric',month:'long'});
+  const today=toStr(), items=[];
+  db.threads.forEach(t=>(t.entries||[]).forEach(e=>{
+    if((e.type==='task'||e.type==='appointment')&&e.dueDate===today) items.push({...e,ttl:t.title,tid:t.id});
+  }));
+  items.sort((a,b)=>{ if(a.dueTime&&b.dueTime) return a.dueTime.localeCompare(b.dueTime); if(a.dueTime) return -1; if(b.dueTime) return 1; return 0; });
+  let h2='';
+  if(items.length){
+    h2=`<div class="sec">Today <span style="color:var(--txd);font-weight:400;">${items.length} item${items.length!==1?'s':''}</span></div>`;
+    h2+=items.map(e=>{
+      const ia=e.type==='appointment';
+      return `<div class="t-item ${ia?'appt':'task'} ${e.completed?'done-i':''}" onclick="openThread('${e.tid}')">
+        ${!ia?`<button class="t-chk ${e.completed?'on':''}" onclick="event.stopPropagation();toggleTask('${e.tid}','${e.id}')">${e.completed?'✓':''}</button>`:'<div style="width:20px;flex-shrink:0;"></div>'}
+        <div><div class="t-text">${esc(e.content)}</div><div class="t-meta">${esc([e.ttl,e.dueTime?fmtTime(e.dueTime):''].filter(Boolean).join(' · '))}</div></div>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('h-today').innerHTML=h2;
+  const unread=db.inbox.filter(i=>!i.processed);
+  let h3='';
+  if(unread.length){
+    h3=`<div class="sec" style="margin-top:18px;">Inbox <span class="sec-lnk" onclick="navigate('inbox')">${unread.length} to process →</span></div>`;
+    h3+=unread.slice(-3).reverse().map(i=>`<div class="card click" onclick="navigate('inbox')" style="padding:11px 15px;"><div style="font-size:14px;color:var(--txd);">${esc(i.rawText.length>90?i.rawText.slice(0,90)+'…':i.rawText)}</div><div style="font-size:11px;color:var(--mu);margin-top:3px;">${fmtDate(i.createdAt)}</div></div>`).join('');
+  }
+  document.getElementById('h-inbox').innerHTML=h3;
+}
+
+// ══ QUICK CAPTURE ══
+function handleQCKey(e){ if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();submitCapture();} }
+function submitCapture(){
+  const el=document.getElementById('qc'), text=el.value.trim(); if(!text) return;
+  db.inbox.push({id:uid(),rawText:text,createdAt:Date.now(),processed:false});
+  persist(); el.value=''; el.style.height='auto'; badge();
+  const qc=el.closest('.qc');
+  qc.style.boxShadow='0 0 0 3px var(--acf)';
+  setTimeout(()=>{qc.style.boxShadow='';},700);
+  renderHome();
+}
+
+// ══ INBOX ══
+let _ai={};
+function renderInbox(){
+  const items=db.inbox.filter(i=>!i.processed).sort((a,b)=>b.createdAt-a.createdAt);
+  document.getElementById('ib-count').textContent=items.length?items.length+' to process':'All clear ✓';
+  const el=document.getElementById('ib-list');
+  if(!items.length){ el.innerHTML=`<div class="empty"><div class="empty-ico">⚡</div><div class="empty-ttl">Inbox zero</div><div class="empty-txt">Captures appear here to be organised and filed into threads.</div></div>`; return; }
+  el.innerHTML=items.map(item=>`
+    <div class="ii" id="ii-${item.id}">
+      <div class="ii-meta">${fmtDate(item.createdAt)}</div>
+      <div class="ii-text">${esc(item.rawText)}</div>
+      <div class="ii-acts">
+        ${db.settings.apiKey?`<button class="btn btn-g btn-s" id="aib-${item.id}" onclick="processAI('${item.id}')">✦ AI Process</button>`:''}
+        <button class="btn btn-d btn-s" onclick="showFile('${item.id}',false)">File manually</button>
+        <button class="btn-xs" onclick="confirmDismiss('${item.id}')">Dismiss</button>
+      </div>
+      <div id="aib-block-${item.id}"></div>
+    </div>`).join('');
+}
+function confirmDismiss(id){
+  if(!confirm('Dismiss without filing?')) return;
+  db.inbox.find(i=>i.id===id).processed=true;
+  persist(); badge(); renderInbox(); renderHome();
+}
+async function processAI(id){
+  const item=db.inbox.find(i=>i.id===id);
+  const btn=document.getElementById('aib-'+id);
+  if(btn){btn.textContent='Processing…';btn.disabled=true;}
+  const prompt=`Life journal assistant. Parse this capture and return ONLY valid JSON (no markdown):
+Capture: "${item.rawText}"
+Life areas: ${db.areas.map(a=>a.id).join(', ')}
+Existing threads: ${db.threads.slice(0,15).map(t=>`"${t.title}" (${t.type})`).join('; ')||'none yet'}
+Return: {"type":"task|appointment|log|learning|note|update","refined_text":"cleaned version","due_date":"YYYY-MM-DD or null","due_time":"HH:MM or null","suggested_area":"area id or null","suggested_thread":"matching thread title or null","suggested_new_thread":"new thread title if needed or null","suggested_thread_type":"project|problem|goal|habit|info or null","reasoning":"one sentence"}`;
+  try{
+    const raw=await callAI(prompt);
+    const p=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    _ai[id]=p; renderAIBlock(id,item,p);
+  }catch(e){
+    document.getElementById('aib-block-'+id).innerHTML=`<div style="color:var(--red);font-size:13px;margin-top:10px;">AI error — try filing manually.</div>`;
+    if(btn){btn.textContent='✦ AI Process';btn.disabled=false;}
+  }
+}
+function renderAIBlock(id,item,p){
+  document.getElementById('aib-block-'+id).innerHTML=`
+    <div class="ai-block">
+      <div class="ai-lbl">✦ AI Suggestion</div>
+      <div class="ai-orig">${esc(item.rawText)}</div>
+      <div class="ai-arr">↓ refined</div>
+      <textarea id="aid-${id}" rows="2" style="font-size:14px;">${esc(p.refined_text||item.rawText)}</textarea>
+      ${p.reasoning?`<div class="ai-why">${esc(p.reasoning)}</div>`:''}
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+        <button class="btn btn-p btn-s" onclick="showFile('${id}',true)">Accept & File →</button>
+        <button class="btn btn-d btn-s" onclick="showFile('${id}',false)">Edit manually</button>
+      </div>
+    </div>`;
+}
+function showFile(id,useAI){
+  const item=db.inbox.find(i=>i.id===id);
+  const p=(useAI&&_ai[id])?_ai[id]:{};
+  const draftEl=document.getElementById('aid-'+id);
+  const prefill=draftEl?draftEl.value:(p.refined_text||item.rawText);
+  const thOpts=db.threads.map(t=>`<option value="${t.id}" ${t.title===p.suggested_thread&&p.suggested_thread?'selected':''}>${esc(t.title)}</option>`).join('');
+  const aOpts=db.areas.map(a=>`<option value="${a.id}" ${a.id===p.suggested_area?'selected':''}>${a.icon} ${a.name}</option>`).join('');
+  const tOpts=Object.entries(TYPES).map(([k,v])=>`<option value="${k}" ${k===(p.type||'note')?'selected':''}>${v.label}</option>`).join('');
+  const ttOpts=Object.entries(THTYPES).map(([k,v])=>`<option value="${k}" ${k===(p.suggested_thread_type||'project')?'selected':''}>${v.icon} ${v.label}</option>`).join('');
+  showModal('File Entry',`
+    <div class="field"><label>Entry text</label><textarea id="f-text" rows="3">${esc(prefill)}</textarea></div>
+    <div class="field"><label>Type</label><select id="f-type">${tOpts}</select></div>
+    <div class="field"><label>Due date</label><input type="date" id="f-date" value="${p.due_date||''}"></div>
+    <div class="field"><label>Time</label><input type="time" id="f-time" value="${p.due_time||''}"></div>
+    <div class="div"></div>
+    <div style="font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);margin-bottom:10px;">File to thread</div>
+    <div class="field"><label>Existing thread</label><select id="f-th" onchange="toggleNT(this)"><option value="">— create new —</option>${thOpts}</select></div>
+    <div id="nt-wrap">
+      <div class="field"><label>New thread title</label><input type="text" id="f-tttl" value="${esc(p.suggested_new_thread||'')}"></div>
+      <div style="display:flex;gap:8px;">
+        <div class="field" style="flex:1;"><label>Type</label><select id="f-tttype">${ttOpts}</select></div>
+        <div class="field" style="flex:1;"><label>Area</label><select id="f-tarea">${aOpts}</select></div>
+      </div>
+    </div>
+    <button class="btn btn-p btn-w" onclick="fileItem('${id}')">File Entry ✓</button>
+  `);
+  if(document.getElementById('f-th').value) document.getElementById('nt-wrap').style.display='none';
+}
+function toggleNT(sel){ document.getElementById('nt-wrap').style.display=sel.value?'none':'block'; }
+function fileItem(inboxId){
+  const text=document.getElementById('f-text').value.trim(); if(!text){alert('Entry text required.');return;}
+  let tid=document.getElementById('f-th').value;
+  if(!tid){
+    const title=document.getElementById('f-tttl').value.trim(); if(!title){alert('Name the new thread.');return;}
+    const nt={id:uid(),title,type:document.getElementById('f-tttype').value,areaIds:[document.getElementById('f-tarea').value].filter(Boolean),status:'active',entries:[],summary:'',createdAt:Date.now()};
+    db.threads.push(nt); tid=nt.id;
+  }
+  db.threads.find(t=>t.id===tid).entries.push({id:uid(),type:document.getElementById('f-type').value,content:text,dueDate:document.getElementById('f-date').value||null,dueTime:document.getElementById('f-time').value||null,completed:false,createdAt:Date.now()});
+  db.inbox.find(i=>i.id===inboxId).processed=true;
+  persist(); closeModal(); badge(); renderInbox(); renderHome();
+}
+
+// ══ LIFE ══
+function setLifeTab(tab){
+  _lifeTab=tab;
+  document.getElementById('lt-areas').classList.toggle('on',tab==='areas');
+  document.getElementById('lt-all').classList.toggle('on',tab==='all');
+  renderLifeView();
+}
+function renderLife(){ renderLifeView(); }
+function renderLifeView(){
+  const el=document.getElementById('life-view');
+  if(_lifeTab==='areas'){
+    el.innerHTML=`<div class="ag">${db.areas.map(a=>{
+      const n=db.threads.filter(t=>t.areaIds.includes(a.id)&&t.status!=='archived').length;
+      return `<div class="ac-card" onclick="openArea('${a.id}')">
+        <div class="ac-icon">${a.icon}</div>
+        <div class="ac-name">${esc(a.name)}</div>
+        <div class="ac-desc">${esc(a.description)}</div>
+        ${n?`<div class="ac-cnt">${n} thread${n!==1?'s':''}</div>`:''}
+      </div>`;
+    }).join('')}</div>`;
+  } else {
+    // All threads view
+    const all=db.threads.slice().sort((a,b)=>b.createdAt-a.createdAt);
+    if(!all.length){ el.innerHTML=`<div class="empty"><div class="empty-ico">◈</div><div class="empty-ttl">No threads yet</div><div class="empty-txt">Create threads by filing captures from your inbox, or tap an area to add one.</div></div>`; return; }
+    const active=all.filter(t=>t.status==='active'||t.status==='watching');
+    const done=all.filter(t=>t.status==='resolved'||t.status==='archived');
+    let html='';
+    if(active.length) html+=active.map(t=>mkTC(t,true)).join('');
+    if(done.length) html+=`<div class="sec" style="margin-top:18px;">Resolved &amp; Archived</div>`+done.map(t=>mkTC(t,true)).join('');
+    el.innerHTML=html||`<div class="empty"><div class="empty-ico">◈</div><div class="empty-ttl">No threads yet</div></div>`;
+  }
+}
+function renderArea(areaId){
+  const area=db.areas.find(a=>a.id===areaId); if(!area) return;
+  document.getElementById('a-title').textContent=area.icon+' '+area.name;
+  document.getElementById('a-new').onclick=()=>showNewThread(areaId);
+  const threads=db.threads.filter(t=>t.areaIds.includes(areaId)).sort((a,b)=>b.createdAt-a.createdAt);
+  const el=document.getElementById('a-threads');
+  if(!threads.length){ el.innerHTML=`<div class="empty"><div class="empty-ico">${area.icon}</div><div class="empty-ttl">No threads yet</div><div class="empty-txt">Create a project, problem, goal, habit, or reference thread.</div></div><button class="btn btn-p btn-w mt16" onclick="showNewThread('${areaId}')">+ New Thread</button>`; return; }
+  const active=threads.filter(t=>t.status==='active'||t.status==='watching');
+  const done=threads.filter(t=>t.status==='resolved'||t.status==='archived');
+  let html=active.map(t=>mkTC(t,false)).join('');
+  if(done.length) html+=`<div class="sec" style="margin-top:18px;">Resolved &amp; Archived</div>`+done.map(t=>mkTC(t,false)).join('');
+  el.innerHTML=html;
+}
+function mkTC(t,showArea){
+  const ti=THTYPES[t.type]||{label:t.type,icon:'📁'};
+  const pending=(t.entries||[]).filter(e=>e.type==='task'&&!e.completed&&e.dueDate).length;
+  const areaNames=showArea?(t.areaIds||[]).map(aid=>{ const a=db.areas.find(x=>x.id===aid); return a?a.icon+' '+a.name:''; }).filter(Boolean).join(', '):'';
+  return `<div class="tc" onclick="openThread('${t.id}')">
+    <div class="tc-top">
+      <div class="tc-title">${esc(t.title)}</div>
+      <span class="badge b-${t.status}">${STATUSES[t.status]||t.status}</span>
+    </div>
+    <div class="tc-bots">
+      <span class="badge b-type">${ti.icon} ${ti.label}</span>
+      ${pending?`<span style="font-size:12px;color:var(--amb);">📋 ${pending} due</span>`:''}
+      <span style="font-size:12px;color:var(--txd);">${(t.entries||[]).length} entr${(t.entries||[]).length!==1?'ies':'y'}</span>
+    </div>
+    ${areaNames?`<div class="tc-area">${esc(areaNames)}</div>`:''}
+  </div>`;
+}
+function showNewThread(areaId){
+  const aP=db.areas.map(a=>`<div class="pill ${a.id===areaId?'on':''}" data-id="${a.id}" onclick="this.classList.toggle('on')">${a.icon} ${a.name}</div>`).join('');
+  const tO=Object.entries(THTYPES).map(([k,v])=>`<option value="${k}">${v.icon} ${v.label}</option>`).join('');
+  showModal('New Thread',`
+    <div class="field"><label>Title</label><input type="text" id="nt-tl" placeholder="e.g. Kitchen renovation, Sleep quality, Japan trip…"></div>
+    <div class="field"><label>Type</label><select id="nt-ty">${tO}</select></div>
+    <div class="field"><label>Life areas</label><div class="pill-g">${aP}</div></div>
+    <button class="btn btn-p btn-w mt8" onclick="createThread()">Create Thread</button>
+  `);
+}
+function createThread(){
+  const title=document.getElementById('nt-tl').value.trim(); if(!title){alert('Title required.');return;}
+  const areaIds=[...document.querySelectorAll('#mo-body .pill.on')].map(p=>p.dataset.id);
+  db.threads.push({id:uid(),title,type:document.getElementById('nt-ty').value,areaIds,status:'active',entries:[],summary:'',createdAt:Date.now()});
+  persist(); closeModal(); if(_prevArea) renderArea(_prevArea); else renderLifeView();
+}
+
+// ══ THREAD DETAIL ══
+function renderThread(id){
+  _curThread=id;
+  const t=db.threads.find(th=>th.id===id); if(!t) return;
+  document.getElementById('td-title').textContent=t.title;
+  const ti=THTYPES[t.type]||{label:t.type,icon:'📁'};
+  const areas=(t.areaIds||[]).map(aid=>{const a=db.areas.find(x=>x.id===aid);return a?`<span class="badge b-area">${a.icon} ${a.name}</span>`:''}).join('');
+  document.getElementById('td-meta').innerHTML=`<span class="badge b-type">${ti.icon} ${ti.label}</span>${areas}<span class="badge b-${t.status}" onclick="showStatusPicker('${id}')" style="cursor:pointer;">${STATUSES[t.status]||t.status}</span>`;
+  document.getElementById('td-acts').innerHTML=`
+    <button class="btn btn-g btn-s" onclick="showAddEntry('${id}')">+ Entry</button>
+    <button class="btn btn-d btn-s" onclick="showEditThread('${id}')">✎ Edit</button>
+    ${db.settings.apiKey?`<button class="btn btn-d btn-s" onclick="genSummary('${id}')">✦ Summarise</button>`:''}`;
+  document.getElementById('td-sum').innerHTML=t.summary?`<div class="sum-card"><div class="sum-lbl">✦ Overview</div><div class="sum-text">${esc(t.summary)}</div></div>`:'';
+  document.getElementById('td-add-bot').onclick=()=>showAddEntry(id);
+  renderEntries(id);
+}
+function renderEntries(threadId){
+  const t=db.threads.find(th=>th.id===threadId); if(!t) return;
+  const el=document.getElementById('td-entries');
+  const entries=(t.entries||[]).slice().reverse();
+  if(!entries.length){ el.innerHTML=`<div class="empty" style="padding:24px 0;"><div class="empty-ico">📓</div><div class="empty-txt">No entries yet — add a log, task, appointment, or update.</div></div>`; return; }
+  el.innerHTML=entries.map(e=>{
+    const ti=TYPES[e.type]||{icon:'·',label:e.type,color:'var(--txd)'};
+    const isTog=e.type==='task'||e.type==='appointment';
+    const due=e.dueDate?`📅 ${e.dueDate}${e.dueTime?' · '+fmtTime(e.dueTime):''}`:'' ;
+    const ed=e.editedAt?` · edited ${fmtDate(e.editedAt)}`:'';
+    return `<div class="er">
+      ${isTog?`<button class="e-tog ${e.completed?'on':''}" onclick="toggleTask('${threadId}','${e.id}')">${e.completed?'✓':''}</button>`:`<div class="e-icon" style="color:${ti.color};">${ti.icon}</div>`}
+      <div class="e-body">
+        <div class="e-text ${e.completed?'struck':''}">${esc(e.content)}</div>
+        ${due?`<div class="e-due">${due}</div>`:''}
+        <div class="e-mr">
+          <span class="e-tlbl" style="color:${ti.color};">${ti.label}</span>
+          <span>${fmtDate(e.createdAt)}</span>
+          ${ed?`<span style="color:var(--mu);">${ed}</span>`:''}
+          <button class="e-edit" onclick="showEditEntry('${threadId}','${e.id}')">Edit</button>
+          <button class="e-del" onclick="delEntry('${threadId}','${e.id}')">Delete</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function toggleTask(tid,eid){
+  const t=db.threads.find(th=>th.id===tid), e=t&&t.entries.find(en=>en.id===eid); if(!e) return;
+  e.completed=!e.completed; persist(); renderEntries(tid); renderHome();
+}
+function showAddEntry(tid){
+  const tO=Object.entries(TYPES).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('');
+  showModal('Add Entry',`
+    <div class="field"><label>Content</label><textarea id="ae-tx" rows="3" placeholder="What happened, what do you need to do, what did you learn?"></textarea></div>
+    <div class="field"><label>Type</label><select id="ae-ty">${tO}</select></div>
+    <div class="field"><label>Due date <span style="font-weight:400;text-transform:none;color:var(--mu);">(for tasks &amp; appointments)</span></label><input type="date" id="ae-dt"></div>
+    <div class="field"><label>Time</label><input type="time" id="ae-tm"></div>
+    ${db.settings.apiKey?`<button class="btn btn-d btn-s mb12" onclick="entryAssist('${tid}')">✦ AI Assist</button>`:''}
+    <div id="ae-assist"></div>
+    <button class="btn btn-p btn-w" onclick="addEntry('${tid}')">Add Entry</button>
+  `);
+}
+function addEntry(tid){
+  const text=document.getElementById('ae-tx').value.trim(); if(!text){alert('Content required.');return;}
+  const t=db.threads.find(th=>th.id===tid);
+  t.entries.push({id:uid(),type:document.getElementById('ae-ty').value,content:text,dueDate:document.getElementById('ae-dt').value||null,dueTime:document.getElementById('ae-tm').value||null,completed:false,createdAt:Date.now()});
+  persist(); closeModal(); renderEntries(tid); renderHome();
+}
+async function entryAssist(tid){
+  const text=document.getElementById('ae-tx').value.trim(); if(!text){alert('Add content first.');return;}
+  const t=db.threads.find(th=>th.id===tid);
+  const btn=document.querySelector('#mo-body .btn-d'); if(btn){btn.textContent='Processing…';btn.disabled=true;}
+  try{
+    const raw=await callAI(`Life journal. Thread: "${t.title}" (${t.type}). Note: "${text}".
+Return ONLY JSON: {"refined_text":"polished version","suggested_type":"update|task|appointment|log|learning|solution|note","suggested_due_date":"YYYY-MM-DD or null","note":"brief helpful comment or null"}`);
+    const p=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    if(p.refined_text) document.getElementById('ae-tx').value=p.refined_text;
+    if(p.suggested_type) document.getElementById('ae-ty').value=p.suggested_type;
+    if(p.suggested_due_date) document.getElementById('ae-dt').value=p.suggested_due_date;
+    document.getElementById('ae-assist').innerHTML=p.note?`<div style="font-size:13px;color:var(--txd);font-style:italic;margin-bottom:12px;">${esc(p.note)}</div>`:'';
+  }catch(e){ document.getElementById('ae-assist').innerHTML=`<div style="color:var(--red);font-size:13px;margin-bottom:8px;">AI error — continue manually.</div>`; }
+  if(btn){btn.textContent='✦ AI Assist';btn.disabled=false;}
+}
+function showEditEntry(tid,eid){
+  const t=db.threads.find(th=>th.id===tid), e=t.entries.find(en=>en.id===eid);
+  const tO=Object.entries(TYPES).map(([k,v])=>`<option value="${k}" ${k===e.type?'selected':''}>${v.label}</option>`).join('');
+  showModal('Edit Entry',`
+    <div class="field"><label>Content</label><textarea id="ee-tx" rows="3">${esc(e.content)}</textarea></div>
+    <div class="field"><label>Type</label><select id="ee-ty">${tO}</select></div>
+    <div class="field"><label>Due date</label><input type="date" id="ee-dt" value="${e.dueDate||''}"></div>
+    <div class="field"><label>Time</label><input type="time" id="ee-tm" value="${e.dueTime||''}"></div>
+    <button class="btn btn-p btn-w" onclick="saveEntry('${tid}','${eid}')">Save</button>
+  `);
+}
+function saveEntry(tid,eid){
+  const t=db.threads.find(th=>th.id===tid), e=t.entries.find(en=>en.id===eid);
+  e.content=document.getElementById('ee-tx').value.trim()||e.content;
+  e.type=document.getElementById('ee-ty').value;
+  e.dueDate=document.getElementById('ee-dt').value||null;
+  e.dueTime=document.getElementById('ee-tm').value||null;
+  e.editedAt=Date.now();
+  persist(); closeModal(); renderEntries(tid);
+}
+function delEntry(tid,eid){
+  if(!confirm('Delete this entry?')) return;
+  const t=db.threads.find(th=>th.id===tid);
+  t.entries=t.entries.filter(e=>e.id!==eid);
+  persist(); renderEntries(tid);
+}
+function showEditThread(id){
+  const t=db.threads.find(th=>th.id===id);
+  const tO=Object.entries(THTYPES).map(([k,v])=>`<option value="${k}" ${k===t.type?'selected':''}>${v.icon} ${v.label}</option>`).join('');
+  const sO=Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${k===t.status?'selected':''}>${v}</option>`).join('');
+  const aP=db.areas.map(a=>`<div class="pill ${t.areaIds.includes(a.id)?'on':''}" data-id="${a.id}" onclick="this.classList.toggle('on')">${a.icon} ${a.name}</div>`).join('');
+  showModal('Edit Thread',`
+    <div class="field"><label>Title</label><input type="text" id="et-tl" value="${esc(t.title)}"></div>
+    <div class="field"><label>Type</label><select id="et-ty">${tO}</select></div>
+    <div class="field"><label>Status</label><select id="et-st">${sO}</select></div>
+    <div class="field"><label>Life areas</label><div class="pill-g">${aP}</div></div>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <button class="btn btn-p" style="flex:1;" onclick="saveThread('${id}')">Save</button>
+      <button class="btn btn-del btn-s" onclick="delThread('${id}')">Delete</button>
+    </div>
+  `);
+}
+function saveThread(id){
+  const t=db.threads.find(th=>th.id===id);
+  t.title=document.getElementById('et-tl').value.trim()||t.title;
+  t.type=document.getElementById('et-ty').value;
+  t.status=document.getElementById('et-st').value;
+  t.areaIds=[...document.querySelectorAll('#mo-body .pill.on')].map(p=>p.dataset.id);
+  persist(); closeModal(); renderThread(id);
+}
+function delThread(id){
+  if(!confirm('Delete this thread and all entries? Cannot be undone.')) return;
+  db.threads=db.threads.filter(t=>t.id!==id);
+  persist(); closeModal(); navigate('life');
+}
+function showStatusPicker(id){
+  const t=db.threads.find(th=>th.id===id);
+  showModal('Set Status',Object.entries(STATUSES).map(([k,v])=>
+    `<button class="btn ${k===t.status?'btn-p':'btn-d'} btn-s btn-w mb8" onclick="setStatus('${id}','${k}')">${v}</button>`).join(''));
+}
+function setStatus(id,status){ db.threads.find(t=>t.id===id).status=status; persist(); closeModal(); renderThread(id); }
+async function genSummary(id){
+  const t=db.threads.find(th=>th.id===id);
+  const btns=document.querySelectorAll('#td-acts .btn-d'); const b=btns[btns.length-1];
+  if(b){b.textContent='Summarising…';b.disabled=true;}
+  const entries=(t.entries||[]).map(e=>`[${e.type}] ${e.content}`).join('\n');
+  try{
+    t.summary=(await callAI(`Summarise this life journal thread in 2–3 sentences, second person ("You started…"), warm and clear.
+Thread: "${t.title}" (${t.type})
+Entries:\n${entries||'None yet.'}
+Return ONLY the summary text.`)).trim();
+    persist(); renderThread(id);
+  }catch(e){ alert('AI error.'); if(b){b.textContent='✦ Summarise';b.disabled=false;} }
+}
+
+// ══ PATTERNS ══
+function renderPatterns(){
+  const el=document.getElementById('pat-list');
+  if(!db.patterns.length){ el.innerHTML=`<div class="empty"><div class="empty-ico">✦</div><div class="empty-ttl">No patterns yet</div><div class="empty-txt">Log daily events in threads, then use AI to surface patterns — or record what you notice yourself.</div></div>`; return; }
+  el.innerHTML=db.patterns.sort((a,b)=>b.createdAt-a.createdAt).map(p=>`
+    <div class="pat-card">
+      <div class="pat-text">${esc(p.text)}</div>
+      <div class="fb"><div style="font-size:12px;color:var(--mu);">${fmtDate(p.createdAt)}</div><button class="e-del" onclick="delPattern('${p.id}')">Delete</button></div>
+    </div>`).join('');
+}
+function showAddPattern(){
+  showModal('Record a Pattern',`
+    <p style="color:var(--txd);font-size:14px;line-height:1.65;margin-bottom:14px;">Something you've noticed that reliably leads somewhere in your life.</p>
+    <div class="field"><textarea id="pat-tx" rows="3" placeholder='e.g. "Swimming in the morning leads to better sleep that night."'></textarea></div>
+    <button class="btn btn-p btn-w" onclick="submitPattern()">Record Pattern</button>
+  `);
+}
+function submitPattern(){
+  const text=document.getElementById('pat-tx').value.trim(); if(!text) return;
+  db.patterns.push({id:uid(),text,createdAt:Date.now()}); persist(); closeModal(); renderPatterns();
+}
+function delPattern(id){
+  if(!confirm('Delete this pattern?')) return;
+  db.patterns=db.patterns.filter(p=>p.id!==id); persist(); renderPatterns();
+}
+async function analysePatterns(){
+  if(!db.settings.apiKey){alert('Add your API key in Settings to use AI analysis.');return;}
+  const btn=document.getElementById('ai-an-btn'); btn.textContent='Analysing…'; btn.disabled=true;
+  const logs=[]; db.threads.forEach(t=>(t.entries||[]).filter(e=>e.type==='log').slice(-6).forEach(e=>logs.push(`[${t.title}] ${e.content} (${new Date(e.createdAt).toLocaleDateString()})`)));
+  if(!logs.length){ document.getElementById('ai-analysis').innerHTML=`<div class="card" style="color:var(--txd);font-size:14px;">No log entries yet. Add event logs to threads and try again.</div>`; btn.textContent='✦ AI Analyse'; btn.disabled=false; return; }
+  const known=db.patterns.length?`\nAlready noted:\n${db.patterns.map(p=>p.text).join('\n')}`:'';
+  try{
+    const result=await callAI(`Identify 2–4 genuine patterns from these life logs. Be specific and practical.\nLogs:\n${logs.join('\n')}${known}`);
+    document.getElementById('ai-analysis').innerHTML=`<div class="sum-card" style="margin-bottom:16px;"><div class="sum-lbl">✦ AI Analysis</div><div style="font-size:15px;color:var(--tx);line-height:1.75;white-space:pre-line;">${esc(result.trim())}</div></div>`;
+  }catch(e){ document.getElementById('ai-analysis').innerHTML=`<div style="color:var(--red);font-size:14px;">AI error — please try again.</div>`; }
+  btn.textContent='✦ AI Analyse'; btn.disabled=false;
+}
+
+// ══ SETTINGS ══
+function openSettings(){
+  document.getElementById('s-name').value=db.settings.name||'';
+  document.getElementById('s-key').value=db.settings.apiKey||'';
+  document.getElementById('th-row').innerHTML=THEMES.map(t=>`<button class="th-btn ${t===db.settings.theme?'on':''}" data-t="${t}" onclick="setTheme('${t}')">${TNAMES[t]}</button>`).join('');
+  document.getElementById('ov-settings').classList.add('open');
+}
+function closeSettings(){ document.getElementById('ov-settings').classList.remove('open'); }
+function saveSettings(){
+  db.settings.name=document.getElementById('s-name').value.trim();
+  db.settings.apiKey=document.getElementById('s-key').value.trim();
+  persist(); closeSettings(); renderHome();
+}
+function setTheme(t){
+  db.settings.theme=t; document.body.setAttribute('data-theme',t); persist();
+  document.querySelectorAll('.th-btn').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+}
+function exportData(){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));
+  a.download='clarity-'+toStr()+'.json'; a.click();
+}
+function importData(ev){
+  const f=ev.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=e=>{ try{ const d=JSON.parse(e.target.result); if(d.threads||d.inbox){db=d;persist();closeSettings();boot();alert('Imported.');} else alert('Invalid file.'); }catch{alert('Could not parse.');} };
+  r.readAsText(f);
+}
+
+// ══ DAILY REVIEW ══
+function openReview(){
+  const today=toStr(), items=[];
+  db.threads.forEach(t=>(t.entries||[]).forEach(e=>{ if((e.type==='task'||e.type==='appointment')&&e.dueDate===today) items.push(e); }));
+  const done=items.filter(i=>i.completed).length, unread=db.inbox.filter(i=>!i.processed).length;
+  document.getElementById('rv-body').innerHTML=`
+    <div class="rv-step">
+      <div class="rv-num">Step 1 of 3</div>
+      <div class="rv-ttl">Today's Recap</div>
+      <p style="color:var(--txd);font-size:14px;margin-bottom:14px;">Tasks completed: <strong style="color:var(--ac);">${done} / ${items.length}</strong></p>
+      <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);margin-bottom:8px;">Log what happened today</div>
+      <div id="rv-logs"><div class="note-row"><textarea class="rv-log" rows="2" placeholder="One thing that happened…"></textarea></div></div>
+      <button class="btn btn-d btn-s mt8" onclick="addNoteRow('rv-logs','rv-log')">＋ Add another</button>
+    </div>
+    <div class="rv-step">
+      <div class="rv-num">Step 2 of 3</div>
+      <div class="rv-ttl">Inbox ${unread>0?`<span style="color:var(--ac);">(${unread})</span>`:'✓'}</div>
+      ${unread>0?`<p style="color:var(--txd);font-size:14px;margin-bottom:12px;"><strong style="color:var(--ac);">${unread}</strong> capture${unread!==1?'s':''} to process.</p><button class="btn btn-g btn-w" onclick="closeReview();navigate('inbox')">Review Inbox →</button>`:`<p style="color:var(--grn);font-size:14px;">✓ Inbox is clear.</p>`}
+    </div>
+    <div class="rv-step">
+      <div class="rv-num">Step 3 of 3</div>
+      <div class="rv-ttl">Notice Any Patterns?</div>
+      <p style="color:var(--txd);font-size:14px;margin-bottom:12px;">Any connection between things you observed today?</p>
+      <div id="rv-pats"><div class="note-row"><textarea class="rv-pat" rows="2" placeholder='e.g. "Skipped exercise → foggy all afternoon"'></textarea></div></div>
+      <button class="btn btn-d btn-s mt8" onclick="addNoteRow('rv-pats','rv-pat')">＋ Add another</button>
+    </div>
+    <button class="btn btn-p btn-w mt16" onclick="completeReview()">Complete Review ✦</button>
+  `;
+  document.getElementById('ov-review').classList.add('open');
+}
+function addNoteRow(cid,cls){
+  const row=document.createElement('div'); row.className='note-row';
+  row.innerHTML=`<textarea class="${cls}" rows="2" placeholder="Another note…"></textarea><button class="note-rm" onclick="this.parentElement.remove()">×</button>`;
+  document.getElementById(cid).appendChild(row);
+}
+function completeReview(){
+  const logs=[...document.querySelectorAll('.rv-log')].map(t=>t.value.trim()).filter(Boolean);
+  const pats=[...document.querySelectorAll('.rv-pat')].map(t=>t.value.trim()).filter(Boolean);
+  logs.forEach(l=>db.inbox.push({id:uid(),rawText:'[Daily Log] '+l,createdAt:Date.now(),processed:false}));
+  pats.forEach(p=>db.patterns.push({id:uid(),text:p,createdAt:Date.now()}));
+  persist(); closeReview(); badge(); renderHome();
+}
+function closeReview(){ document.getElementById('ov-review').classList.remove('open'); }
+
+// ══ MODAL ══
+function showModal(title,html){ document.getElementById('mo-title').textContent=title; document.getElementById('mo-body').innerHTML=html; document.getElementById('modal').classList.add('open'); }
+function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+function maybeClose(e){ if(e.target===document.getElementById('modal')) closeModal(); }
+
+// ══ AI ══
+async function callAI(prompt){
+  const key=db.settings.apiKey; if(!key) throw new Error('No API key');
+  const res=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})
+  });
+  if(!res.ok) throw new Error('API '+res.status);
+  const data=await res.json();
+  return data.content.map(b=>b.type==='text'?b.text:'').join('');
+}
+
+// ══ SETUP ══
+function completeSetup(){
+  const name=document.getElementById('su-name').value.trim(); if(!name){alert('Please enter your name.');return;}
+  db.settings.name=name; db.settings.apiKey=document.getElementById('su-key').value.trim(); persist();
+  document.getElementById('ov-setup').classList.remove('open'); renderHome();
+}
+
+// ══ ICON ══
+function makeIcon(){
+  try{
+    const c=document.createElement('canvas'); c.width=c.height=192;
+    const x=c.getContext('2d');
+    x.fillStyle='#0e0a06'; x.fillRect(0,0,192,192);
+    x.fillStyle='#5a9a68'; x.font='bold 100px serif'; x.textAlign='center'; x.textBaseline='middle';
+    x.fillText('◈',96,96);
+    document.getElementById('app-touch-icon').href=c.toDataURL();
+  }catch(e){}
+}
+
+// ══ BOOT ══
+function boot(){
+  loadDB();
+  document.body.setAttribute('data-theme',db.settings.theme||'forest');
+  makeIcon();
+  try{
+    const sw=`self.addEventListener('install',e=>e.waitUntil(caches.open('clarity-v1').then(c=>c.add('/'))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;
+    navigator.serviceWorker&&navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
+  }catch(e){}
+  if(!db.settings.name){ document.getElementById('ov-setup').classList.add('open'); }
+  else { renderHome(); badge(); }
+}
+window.addEventListener('DOMContentLoaded', boot);
+</script>
+</body>
+</html>
