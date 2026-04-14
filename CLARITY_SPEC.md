@@ -1,4 +1,4 @@
-# Clarity — Life Journal · SPEC v1.2
+# Clarity — Life Journal · SPEC v1.3
 
 > **This document is the single source of truth for the Clarity app.**
 > Upload this file alongside `index.html` (and optionally a JSON backup) at the start of every Claude session.
@@ -21,6 +21,8 @@ Clarity is a **sister app** to Covenant (the prayer journal), not an extension o
 
 They should never be merged. The inbox *pattern* is the same, the *content* is different. A user might open Covenant in the evening and Clarity in the morning — they feel like one ecosystem but serve separate functions.
 
+**Note on scripture and faith features:** Any request to add scripture, devotional content, or interior spiritual life features to Clarity should be flagged as Covenant territory. A "Faith" *life area* (external practices like retreats, books, church attendance) is acceptable in Clarity if the user requests it as an editable area.
+
 ---
 
 ## Design Decisions
@@ -41,16 +43,19 @@ They should never be merged. The inbox *pattern* is the same, the *content* is d
 
 ### Navigation
 
-- Bottom nav: Home · Inbox · Calendar · Life · Patterns
+- Bottom nav: Home · Inbox · Calendar · Threads · Patterns
+  - "Threads" was formerly labelled "Life" in the nav — renamed for clarity
 - Settings opens as a full-screen overlay via **gear icon top-right of Home screen** (not in bottom nav)
-- Area detail and Thread detail are sub-screens of Life (no separate nav tabs)
+- Area detail and Thread detail are sub-screens of Threads (no separate nav tabs)
 - Daily Review opens as a full-screen overlay (button on Home screen)
-- Thread detail can be reached from Home (today items), Inbox (after filing), Calendar (tap item), or Life (area or all-threads view)
+- Thread detail can be reached from Home (today items), Inbox (after filing), Calendar (tap item), or Threads (area or all-threads view)
 
 ### Organisational Model
 
-- **Areas** (7 default, not editable in v1): Home · Work · Health · Mind · Money · People · Growth
+- **Areas** (7 default, now fully editable): Home · Work · Health · Mind · Money · People · Growth
   - Each has an icon, name, and short description
+  - Areas are editable in Settings: rename, change icon, change description, add new, or remove
+  - Removing an area does not delete threads — it removes the area tag from those threads
   - Areas are tags — threads can belong to multiple areas
 - **Threads** are the core unit — a named, typed, living record:
   - Types: Project · Problem · Goal · Habit · Reference
@@ -60,7 +65,7 @@ They should never be merged. The inbox *pattern* is the same, the *content* is d
   - Types: Task · Appointment · Log · Update · Learning · Solution · Note
   - Tasks and Appointments have optional due date + time, and a completed toggle
   - All other types are plain records
-- **Life screen** has two views:
+- **Threads screen** has two views:
   - **By Area** — 2-column grid of area cards, tap to drill into that area's threads
   - **All Threads** — flat list of all threads across all areas, shows area tags, grouped active/resolved
 - Inbox → file to existing thread OR create new thread in one step
@@ -104,6 +109,7 @@ They should never be merged. The inbox *pattern* is the same, the *content* is d
 - Checked notes are grouped into a collapsible "✓ Show archived (n)" section
 - Unchecked notes can be edited inline; checked notes show "done" date
 - Notes are never auto-deleted — archive by ticking, remove manually with Remove button
+- **Export as Text** button — downloads all dev notes (open + done) as a plain `.txt` file
 - Use for: feature ideas, bugs noticed, things to build next
 
 ### Voice Capture
@@ -150,11 +156,18 @@ They should never be merged. The inbox *pattern* is the same, the *content* is d
 - Requires Anthropic API key (stored in localStorage)
 - AI features:
   - **Inbox processing**: parses raw capture → suggests type, refined text, due date, area, matching/new thread — shows original + editable refined draft side by side
-  - **Entry assist**: in Add Entry modal — polishes note, suggests type and due date
+  - **Entry assist**: in Add Entry modal — polishes note, suggests type and due date; if a date is suggested it auto-opens the schedule section
   - **Thread summary**: summarises the full entry thread in 2–3 sentences, second person ("You started this…"), stored on the thread
   - **Pattern analysis**: reads recent Log entries across all threads, identifies 2–4 genuine patterns — shown on the Patterns screen
 - All AI is assistive — user reviews/edits before anything is saved
 - Manual mode available for all features without API key
+
+### Add Entry / File Entry Modals — Compact Design
+
+- The **Schedule (date & time)** section in both Add Entry and File Entry modals is collapsed by default using a `<details>` element
+- Tapping "📅 Schedule (date & time)" expands to reveal date and time inputs
+- The section auto-opens when: AI suggests a date/time, or an existing entry being edited already has a date
+- This keeps modals compact and focused — most entries don't need scheduling
 
 ### Daily Review (3 steps)
 
@@ -170,6 +183,12 @@ They should never be merged. The inbox *pattern* is the same, the *content* is d
 - **Inbox preview** — last 3 unprocessed captures with link to Inbox
 - **Daily Review** button — opens review overlay
 - **Settings gear** — top-right of home bar, opens settings overlay
+
+### Data Export
+
+- **Export JSON** — full backup of all data (threads, entries, inbox, patterns, dev notes, settings)
+- **Export CSV** — tabular export of all threads and entries; columns: Thread, Thread Type, Thread Status, Areas, Entry Type, Content, Due Date, Due Time, Completed, Created. Threads with no entries appear as a single row. Useful for spreadsheet analysis.
+- **Import JSON** — restores a full JSON backup
 
 ---
 
@@ -188,6 +207,7 @@ areas: [{
   id, name, icon, description
 }]
 // Default 7: home, work, health, mind, money, people, growth
+// Fully editable by user — add, rename, remove
 
 threads: [{
   id, title,
@@ -233,13 +253,13 @@ devNotes: [{
 | Home | Nav: Home | Greeting, quick capture (with voice), today items, inbox preview, daily review |
 | Inbox | Nav: Inbox | Unprocessed captures — AI process or file manually |
 | Calendar | Nav: Calendar | Week view of scheduled tasks, actions, and appointments |
-| Life — By Area | Nav: Life | 2-column grid of 7 life areas |
-| Life — All Threads | Nav: Life → All Threads tab | Flat list of all threads, area tags shown |
+| Threads — By Area | Nav: Threads | 2-column grid of life areas |
+| Threads — All Threads | Nav: Threads → All Threads tab | Flat list of all threads across all areas, area tags shown |
 | Area Detail | Tap any area card | Threads within that area, grouped active/resolved |
 | Thread Detail | Tap any thread | Entry thread + AI summary + add/edit entries |
 | Patterns | Nav: Patterns | User-recorded patterns + AI analysis of log entries |
 | Daily Review | Home button | 3-step guided overlay |
-| Settings | Gear icon on Home | Name, API key, theme, notifications, dev notes, export/import |
+| Settings | Gear icon on Home | Name, API key, theme, life areas, notifications, data export, dev notes |
 | Setup | First launch | Name + optional API key |
 
 ---
@@ -260,12 +280,12 @@ devNotes: [{
 
 1. Tap **File manually** on an inbox item
 2. File Entry modal opens with raw text pre-filled
-3. User fills in type, date, thread → File Entry ✓
+3. User fills in type, thread; date/time are in a collapsible section → File Entry ✓
 
 ### Add Entry Directly to Thread
 
 1. Open any thread → **+ Entry** button (header or bottom dashed button)
-2. Add Entry modal — type content, select type, optional date/time
+2. Add Entry modal — type content, select type, optionally expand "📅 Schedule" for date/time
 3. **✦ AI Assist** refines the text and suggests type/date if API key set
 
 ### Pattern Detection
@@ -326,6 +346,7 @@ Sits alongside Covenant as a sister repo on the same GitHub account. No conflict
 | v1.0 | 2026-03-15 | Initial build: quick capture, inbox with AI processing, 7 life areas, threads (5 types), entries (7 types), task/appointment completion toggles, today view on home, By Area + All Threads views, pattern recording + AI analysis, daily review overlay, AI entry assist, AI thread summaries, 5 themes (Forest/Cloud/Ocean/Dawn/Stone), export/import JSON, PWA |
 | v1.1 | 2026-03-15 | Dev notes in Settings (checkbox archive, collapsible archived section, inline edit); voice capture via Web Speech API (live transcription, pulsing mic button, en-AU locale); Android Chrome voice fix (continuous:false + auto-restart); Action entry type; modal X close button |
 | v1.2 | 2026-03-15 | Calendar week view (nav tab, day chips, week navigation, colour-coded items, dot indicators); browser notifications (permission flow in Settings, setTimeout scheduling on boot and visibility change, reschedule button) |
+| v1.3 | 2026-04-13 | Nav "Life" renamed to "Threads" for clarity; screen header updated to match; thread cards made more compact (tighter padding, smaller title font); CSV export added to Settings > Data (threads + entries tabular); Dev Notes text export button added; Life Areas now fully editable in Settings (edit name/icon/description, add new areas, remove areas); date/time fields in Add Entry, Edit Entry, and File Entry modals collapsed into a "📅 Schedule" `<details>` toggle (auto-opens when AI suggests a date or entry already has one) |
 
 ---
 
@@ -335,7 +356,6 @@ Sits alongside Covenant as a sister repo on the same GitHub account. No conflict
 - No search across threads and entries
 - No recurring tasks
 - Pattern analysis requires manual trigger — not automatic
-- Areas cannot be renamed or reordered in v1
 - Service worker Blob URL may not persist after page close on some browsers
 - Notifications only fire while app is open or running as installed PWA — no push server
 
@@ -346,11 +366,12 @@ Sits alongside Covenant as a sister repo on the same GitHub account. No conflict
 - [ ] Search across all threads and entries
 - [ ] Recurring tasks (daily, weekly)
 - [ ] Automatic pattern suggestions after N log entries
-- [ ] Rename and reorder life areas
 - [ ] Thread linking (e.g. a Problem thread linked to a Health area Goal)
 - [ ] Weekly summary (AI-generated overview of the week's logs and progress)
 - [ ] Export as formatted PDF or Markdown
+- [ ] People / contacts section — dedicated notes on specific people (beyond the People area)
+- [ ] AI thread/area suggestions from inbox processing (suggest restructuring, new areas)
 
 ---
 
-*Clarity SPEC v1.2 — Built with Claude Sonnet, March 2026*
+*Clarity SPEC v1.3 — Built with Claude Sonnet, April 2026*

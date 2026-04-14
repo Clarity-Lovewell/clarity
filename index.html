@@ -125,6 +125,15 @@ textarea:focus,input:focus,select:focus{border-color:var(--ac);background:var(--
 textarea::placeholder,input::placeholder{color:var(--mu);}
 select option{background:var(--sf2);color:var(--tx);}
 
+/* ══ SCHEDULE DETAILS ══ */
+.sched-toggle{border:1px solid var(--br);border-radius:9px;padding:10px 14px;margin-bottom:14px;background:var(--sf2);}
+.sched-toggle summary{font-size:12px;font-weight:500;letter-spacing:.04em;color:var(--mu);cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px;user-select:none;}
+.sched-toggle summary::-webkit-details-marker{display:none;}
+.sched-toggle summary::after{content:'▾';margin-left:auto;font-size:10px;transition:transform .18s;}
+.sched-toggle[open] summary::after{transform:rotate(180deg);}
+.sched-toggle[open] summary{color:var(--ac);}
+.sched-toggle .sched-inner{padding-top:12px;}
+
 /* ══ HOME ══ */
 .home-bar{display:flex;align-items:flex-start;justify-content:space-between;padding-top:10px;margin-bottom:18px;}
 .home-greet{font-family:'DM Serif Display',Georgia,serif;font-size:27px;font-weight:400;color:var(--tx);line-height:1.15;}
@@ -141,21 +150,11 @@ select option{background:var(--sf2);color:var(--tx);}
 .qc-actions{display:flex;gap:8px;align-items:center;}
 
 /* ══ VOICE BUTTON ══ */
-.mic-btn{
-  background:none;border:1px solid var(--br);color:var(--mu);
-  cursor:pointer;font-size:17px;padding:6px 9px;border-radius:8px;
-  line-height:1;transition:all .18s;flex-shrink:0;
-}
+.mic-btn{background:none;border:1px solid var(--br);color:var(--mu);cursor:pointer;font-size:17px;padding:6px 9px;border-radius:8px;line-height:1;transition:all .18s;flex-shrink:0;}
 .mic-btn:hover{border-color:var(--brs);color:var(--ac);}
-.mic-btn.recording{
-  border-color:var(--red);color:var(--red);
-  animation:pulse-rec .9s ease-in-out infinite;
-}
+.mic-btn.recording{border-color:var(--red);color:var(--red);animation:pulse-rec .9s ease-in-out infinite;}
 @keyframes pulse-rec{0%,100%{opacity:1;}50%{opacity:.55;}}
-.voice-status{
-  font-size:12px;color:var(--ac);margin-top:6px;
-  display:none;font-style:italic;
-}
+.voice-status{font-size:12px;color:var(--ac);margin-top:6px;display:none;font-style:italic;}
 .voice-status.on{display:block;}
 
 /* ══ SECTION ══ */
@@ -200,13 +199,13 @@ select option{background:var(--sf2);color:var(--tx);}
 .ac-desc{font-size:12px;color:var(--txd);line-height:1.4;}
 .ac-cnt{font-size:11px;color:var(--ac);margin-top:8px;font-weight:500;}
 
-/* ══ THREAD CARDS ══ */
-.tc{background:var(--sf);border:1px solid var(--br);border-radius:13px;padding:16px;margin-bottom:10px;cursor:pointer;transition:all .18s;}
+/* ══ THREAD CARDS — compact ══ */
+.tc{background:var(--sf);border:1px solid var(--br);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:all .18s;}
 .tc:hover{border-color:var(--brs);background:var(--sf2);}
-.tc-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;}
-.tc-title{font-family:'DM Serif Display',Georgia,serif;font-size:17px;color:var(--tx);flex:1;font-weight:400;}
-.tc-area{font-size:12px;color:var(--mu);margin-top:4px;}
-.tc-bots{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.tc-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:6px;}
+.tc-title{font-family:'DM Serif Display',Georgia,serif;font-size:16px;color:var(--tx);flex:1;font-weight:400;line-height:1.3;}
+.tc-area{font-size:11px;color:var(--mu);margin-top:3px;}
+.tc-bots{display:flex;flex-wrap:wrap;gap:5px;align-items:center;}
 
 /* ══ THREAD DETAIL ══ */
 .td-hd{margin-bottom:18px;padding-top:8px;}
@@ -260,6 +259,13 @@ select option{background:var(--sf2);color:var(--tx);}
 .dn-del-btn:hover{color:var(--red);}
 .dn-arch-btn{background:none;border:none;cursor:pointer;font-size:12px;color:var(--mu);padding:6px 0;margin-top:4px;text-align:left;font-family:'DM Sans',sans-serif;transition:color .15s;}
 .dn-arch-btn:hover{color:var(--ac);}
+
+/* ══ AREA SETTINGS ROW ══ */
+.area-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--sf2);border:1px solid var(--br);border-radius:10px;margin-bottom:6px;}
+.area-row-icon{font-size:20px;flex-shrink:0;width:28px;text-align:center;}
+.area-row-info{flex:1;min-width:0;}
+.area-row-name{font-size:14px;color:var(--tx);font-weight:500;}
+.area-row-desc{font-size:12px;color:var(--txd);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
 /* ══ MODAL ══ */
 .mo{position:fixed;inset:0;background:rgba(0,0,0,.70);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px);}
@@ -370,33 +376,52 @@ select option{background:var(--sf2);color:var(--tx);}
 <div class="ov" id="ov-settings">
   <div class="ov-inner">
     <div class="ov-head"><div class="ov-title">Settings</div><button class="x-btn" onclick="closeSettings()">✕</button></div>
-    <div style="font-size:11px;color:var(--mu);margin-top:-18px;margin-bottom:22px;letter-spacing:.04em;">Clarity v1.2</div>
+    <div style="font-size:11px;color:var(--mu);margin-top:-18px;margin-bottom:22px;letter-spacing:.04em;">Clarity v1.3</div>
+
     <div class="s-sec">
       <div class="s-sec-t">Profile</div>
       <div class="field"><label>Name</label><input id="s-name" type="text"></div>
       <div class="field"><label>Anthropic API key</label><input id="s-key" type="password" placeholder="sk-ant-…"></div>
       <button class="btn btn-p" onclick="saveSettings()">Save</button>
     </div>
-    <div class="s-sec"><div class="s-sec-t">Appearance</div><div class="th-row" id="th-row"></div></div>
+
+    <div class="s-sec">
+      <div class="s-sec-t">Appearance</div>
+      <div class="th-row" id="th-row"></div>
+    </div>
+
+    <div class="s-sec">
+      <div class="s-sec-t">Life Areas</div>
+      <p style="font-size:13px;color:var(--mu);margin-bottom:12px;line-height:1.55;">Edit your life areas to personalise Clarity. Threads can belong to multiple areas.</p>
+      <div id="areas-list" style="margin-bottom:12px;"></div>
+      <button class="btn btn-d btn-s" onclick="showAddArea()">+ Add Area</button>
+    </div>
+
     <div class="s-sec">
       <div class="s-sec-t">Notifications</div>
       <div id="notif-status-wrap"></div>
       <p style="font-size:13px;color:var(--mu);line-height:1.55;margin-bottom:10px;">Get reminded when tasks and appointments are due. Works while the app is open or running in the background as a PWA.</p>
       <button class="btn btn-d btn-s" id="notif-req-btn" onclick="requestNotifPermission()">Enable Notifications</button>
     </div>
+
     <div class="s-sec">
       <div class="s-sec-t">Data</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <button class="btn btn-g btn-s" onclick="exportData()">Export JSON</button>
+        <button class="btn btn-g btn-s" onclick="exportCSV()">Export CSV</button>
         <label class="btn btn-d btn-s" style="cursor:pointer;">Import JSON<input type="file" accept=".json" style="display:none;" onchange="importData(event)"></label>
       </div>
     </div>
+
     <div class="s-sec">
       <div class="s-sec-t">Dev Notes</div>
       <p style="font-size:13px;color:var(--mu);margin-bottom:12px;line-height:1.55;">Ideas, bugs, and things to build next. Tick when done.</p>
       <div id="dn-list" style="margin-bottom:12px;"></div>
       <textarea id="dn-input" rows="2" placeholder="e.g. Add search across all threads…"></textarea>
-      <button class="btn btn-d btn-s mt8" onclick="addDevNote()">Add Note</button>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="btn btn-d btn-s" onclick="addDevNote()">Add Note</button>
+        <button class="btn btn-d btn-s" onclick="exportDevNotesText()">Export as Text</button>
+      </div>
     </div>
   </div>
 </div>
@@ -459,10 +484,10 @@ select option{background:var(--sf2);color:var(--tx);}
     <div id="ib-list"></div>
   </div>
 
-  <!-- LIFE -->
+  <!-- THREADS (was: LIFE) -->
   <div class="screen" id="screen-life">
     <div style="padding-top:8px;margin-bottom:18px;">
-      <h2 class="screen-title" style="margin:0;font-size:26px;">Your Life</h2>
+      <h2 class="screen-title" style="margin:0;font-size:26px;">Threads</h2>
     </div>
     <div class="life-tabs">
       <button class="life-tab on" id="lt-areas" onclick="setLifeTab('areas')">By Area</button>
@@ -509,6 +534,7 @@ select option{background:var(--sf2);color:var(--tx);}
     <div id="ai-analysis"></div>
     <div id="pat-list"></div>
   </div>
+
   <!-- CALENDAR -->
   <div class="screen" id="screen-calendar">
     <div style="padding-top:8px;margin-bottom:18px;">
@@ -532,7 +558,7 @@ select option{background:var(--sf2);color:var(--tx);}
     <div class="nav-ib"><span class="ico">⚡</span><span class="nav-badge" id="nb"></span></div>Inbox
   </button>
   <button class="nav-btn" id="nav-calendar" onclick="navigate('calendar')"><span class="ico">📅</span>Calendar</button>
-  <button class="nav-btn" id="nav-life" onclick="navigate('life')"><span class="ico">◈</span>Life</button>
+  <button class="nav-btn" id="nav-life" onclick="navigate('life')"><span class="ico">◈</span>Threads</button>
   <button class="nav-btn" id="nav-patterns" onclick="navigate('patterns')"><span class="ico">✦</span>Patterns</button>
 </nav>
 
@@ -630,24 +656,14 @@ function submitCapture(){
 
 // ══ VOICE CAPTURE ══
 let _recognition=null,_isRecording=false,_voiceFinal='';
-function toggleVoice(){
-  if(_isRecording){stopVoice();}else{startVoice();}
-}
+function toggleVoice(){if(_isRecording){stopVoice();}else{startVoice();}}
 async function startVoice(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){
-    alert('Voice capture requires Chrome or Safari. Your browser does not support it.');
-    return;
-  }
-  // Request mic permission explicitly first — needed on Android Chrome
-  try{
-    await navigator.mediaDevices.getUserMedia({audio:true});
-  }catch(err){
-    alert('Microphone permission denied. Please allow microphone access and try again.');
-    return;
-  }
+  if(!SR){alert('Voice capture requires Chrome or Safari. Your browser does not support it.');return;}
+  try{await navigator.mediaDevices.getUserMedia({audio:true});}
+  catch(err){alert('Microphone permission denied. Please allow microphone access and try again.');return;}
   _isRecording=true;
-  _voiceFinal=document.getElementById('qc').value; // preserve any existing text
+  _voiceFinal=document.getElementById('qc').value;
   document.getElementById('mic-btn').classList.add('recording');
   document.getElementById('mic-btn').textContent='⏹';
   document.getElementById('voice-status').classList.add('on');
@@ -656,7 +672,7 @@ async function startVoice(){
 function _startRecognition(SR){
   if(!_isRecording) return;
   _recognition=new SR();
-  _recognition.continuous=false; // Android doesn't support continuous — we restart manually
+  _recognition.continuous=false;
   _recognition.interimResults=true;
   _recognition.lang='en-AU';
   _recognition.onresult=e=>{
@@ -670,26 +686,17 @@ function _startRecognition(SR){
     autoResize(qc);
   };
   _recognition.onerror=e=>{
-    // 'no-speech' and 'aborted' are normal — don't alert, just restart
-    if(e.error==='not-allowed'||e.error==='service-not-allowed'){
-      alert('Microphone access was denied.');
-      stopVoice(); return;
-    }
-    // For other errors (network, audio-capture) restart silently
+    if(e.error==='not-allowed'||e.error==='service-not-allowed'){alert('Microphone access was denied.');stopVoice();return;}
     if(_isRecording) setTimeout(()=>_startRecognition(SR),300);
   };
-  _recognition.onend=()=>{
-    // Restart automatically to simulate continuous mode on Android
-    if(_isRecording) setTimeout(()=>_startRecognition(SR),100);
-  };
-  try{ _recognition.start(); }catch(e){ if(_isRecording) setTimeout(()=>_startRecognition(SR),300); }
+  _recognition.onend=()=>{if(_isRecording) setTimeout(()=>_startRecognition(SR),100);};
+  try{_recognition.start();}catch(e){if(_isRecording) setTimeout(()=>_startRecognition(SR),300);}
 }
 function stopVoice(){
   _isRecording=false;
-  if(_recognition){try{_recognition.abort();}catch(e){} _recognition=null;}
+  if(_recognition){try{_recognition.abort();}catch(e){}_recognition=null;}
   const btn=document.getElementById('mic-btn');
-  btn.classList.remove('recording');
-  btn.textContent='🎙';
+  btn.classList.remove('recording');btn.textContent='🎙';
   document.getElementById('voice-status').classList.remove('on');
 }
 
@@ -761,8 +768,13 @@ function showFile(id,useAI){
   showModal('File Entry',`
     <div class="field"><label>Entry text</label><textarea id="f-text" rows="3">${esc(prefill)}</textarea></div>
     <div class="field"><label>Type</label><select id="f-type">${tOpts}</select></div>
-    <div class="field"><label>Due date</label><input type="date" id="f-date" value="${p.due_date||''}"></div>
-    <div class="field"><label>Time</label><input type="time" id="f-time" value="${p.due_time||''}"></div>
+    <details class="sched-toggle">
+      <summary>📅 Schedule (date & time)</summary>
+      <div class="sched-inner">
+        <div class="field"><label>Due date</label><input type="date" id="f-date" value="${p.due_date||''}"></div>
+        <div class="field"><label>Time</label><input type="time" id="f-time" value="${p.due_time||''}"></div>
+      </div>
+    </details>
     <div class="div"></div>
     <div style="font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--mu);margin-bottom:10px;">File to thread</div>
     <div class="field"><label>Existing thread</label><select id="f-th" onchange="toggleNT(this)"><option value="">— create new —</option>${thOpts}</select></div>
@@ -775,6 +787,8 @@ function showFile(id,useAI){
     </div>
     <button class="btn btn-p btn-w" onclick="fileItem('${id}')">File Entry ✓</button>
   `);
+  // Auto-expand schedule if dates were AI-suggested
+  if(p.due_date||p.due_time) document.querySelector('.sched-toggle').setAttribute('open','');
   if(document.getElementById('f-th').value) document.getElementById('nt-wrap').style.display='none';
 }
 function toggleNT(sel){document.getElementById('nt-wrap').style.display=sel.value?'none':'block';}
@@ -791,7 +805,7 @@ function fileItem(inboxId){
   persist();closeModal();badge();renderInbox();renderHome();
 }
 
-// ══ LIFE ══
+// ══ LIFE / THREADS ══
 function setLifeTab(tab){
   _lifeTab=tab;
   document.getElementById('lt-areas').classList.toggle('on',tab==='areas');
@@ -817,7 +831,7 @@ function renderLifeView(){
     const active=all.filter(t=>t.status==='active'||t.status==='watching');
     const done=all.filter(t=>t.status==='resolved'||t.status==='archived');
     let html=active.map(t=>mkTC(t,true)).join('');
-    if(done.length) html+=`<div class="sec" style="margin-top:18px;">Resolved &amp; Archived</div>`+done.map(t=>mkTC(t,true)).join('');
+    if(done.length) html+=`<div class="sec" style="margin-top:16px;">Resolved &amp; Archived</div>`+done.map(t=>mkTC(t,true)).join('');
     el.innerHTML=html||`<div class="empty"><div class="empty-ico">◈</div><div class="empty-ttl">No threads yet</div></div>`;
   }
 }
@@ -831,13 +845,13 @@ function renderArea(areaId){
   const active=threads.filter(t=>t.status==='active'||t.status==='watching');
   const done=threads.filter(t=>t.status==='resolved'||t.status==='archived');
   let html=active.map(t=>mkTC(t,false)).join('');
-  if(done.length) html+=`<div class="sec" style="margin-top:18px;">Resolved &amp; Archived</div>`+done.map(t=>mkTC(t,false)).join('');
+  if(done.length) html+=`<div class="sec" style="margin-top:16px;">Resolved &amp; Archived</div>`+done.map(t=>mkTC(t,false)).join('');
   el.innerHTML=html;
 }
 function mkTC(t,showArea){
   const ti=THTYPES[t.type]||{label:t.type,icon:'📁'};
   const pending=(t.entries||[]).filter(e=>e.type==='task'&&!e.completed&&e.dueDate).length;
-  const areaNames=showArea?(t.areaIds||[]).map(aid=>{const a=db.areas.find(x=>x.id===aid);return a?a.icon+' '+a.name:'';}).filter(Boolean).join(', '):'';
+  const areaNames=showArea?(t.areaIds||[]).map(aid=>{const a=db.areas.find(x=>x.id===aid);return a?a.icon+' '+a.name:'';}).filter(Boolean).join(' · '):'';
   return `<div class="tc" onclick="openThread('${t.id}')">
     <div class="tc-top"><div class="tc-title">${esc(t.title)}</div><span class="badge b-${t.status}">${STATUSES[t.status]||t.status}</span></div>
     <div class="tc-bots">
@@ -916,11 +930,16 @@ function showAddEntry(tid){
   showModal('Add Entry',`
     <div class="field"><label>Content</label><textarea id="ae-tx" rows="3" placeholder="What happened, what do you need to do, what did you learn?"></textarea></div>
     <div class="field"><label>Type</label><select id="ae-ty">${tO}</select></div>
-    <div class="field"><label>Due date <span style="font-weight:400;text-transform:none;color:var(--mu);">(for tasks &amp; appointments)</span></label><input type="date" id="ae-dt"></div>
-    <div class="field"><label>Time</label><input type="time" id="ae-tm"></div>
-    ${db.settings.apiKey?`<button class="btn btn-d btn-s mb12" onclick="entryAssist('${tid}')">✦ AI Assist</button>`:''}
+    <details class="sched-toggle">
+      <summary>📅 Schedule (date & time)</summary>
+      <div class="sched-inner">
+        <div class="field"><label>Due date</label><input type="date" id="ae-dt"></div>
+        <div class="field"><label>Time</label><input type="time" id="ae-tm"></div>
+      </div>
+    </details>
+    ${db.settings.apiKey?`<button class="btn btn-d btn-s mt8 mb12" onclick="entryAssist('${tid}')">✦ AI Assist</button>`:''}
     <div id="ae-assist"></div>
-    <button class="btn btn-p btn-w" onclick="addEntry('${tid}')">Add Entry</button>
+    <button class="btn btn-p btn-w mt8" onclick="addEntry('${tid}')">Add Entry</button>
   `);
 }
 function addEntry(tid){
@@ -939,7 +958,7 @@ Return ONLY JSON: {"refined_text":"polished version","suggested_type":"update|ta
     const p=JSON.parse(raw.replace(/```json|```/g,'').trim());
     if(p.refined_text) document.getElementById('ae-tx').value=p.refined_text;
     if(p.suggested_type) document.getElementById('ae-ty').value=p.suggested_type;
-    if(p.suggested_due_date) document.getElementById('ae-dt').value=p.suggested_due_date;
+    if(p.suggested_due_date){document.getElementById('ae-dt').value=p.suggested_due_date;document.querySelector('.sched-toggle').setAttribute('open','');}
     document.getElementById('ae-assist').innerHTML=p.note?`<div style="font-size:13px;color:var(--txd);font-style:italic;margin-bottom:12px;">${esc(p.note)}</div>`:'';
   }catch(e){document.getElementById('ae-assist').innerHTML=`<div style="color:var(--red);font-size:13px;margin-bottom:8px;">AI error — continue manually.</div>`;}
   if(btn){btn.textContent='✦ AI Assist';btn.disabled=false;}
@@ -950,9 +969,14 @@ function showEditEntry(tid,eid){
   showModal('Edit Entry',`
     <div class="field"><label>Content</label><textarea id="ee-tx" rows="3">${esc(e.content)}</textarea></div>
     <div class="field"><label>Type</label><select id="ee-ty">${tO}</select></div>
-    <div class="field"><label>Due date</label><input type="date" id="ee-dt" value="${e.dueDate||''}"></div>
-    <div class="field"><label>Time</label><input type="time" id="ee-tm" value="${e.dueTime||''}"></div>
-    <button class="btn btn-p btn-w" onclick="saveEntry('${tid}','${eid}')">Save</button>
+    <details class="sched-toggle" ${e.dueDate||e.dueTime?'open':''}>
+      <summary>📅 Schedule (date & time)</summary>
+      <div class="sched-inner">
+        <div class="field"><label>Due date</label><input type="date" id="ee-dt" value="${e.dueDate||''}"></div>
+        <div class="field"><label>Time</label><input type="time" id="ee-tm" value="${e.dueTime||''}"></div>
+      </div>
+    </details>
+    <button class="btn btn-p btn-w mt8" onclick="saveEntry('${tid}','${eid}')">Save</button>
   `);
 }
 function saveEntry(tid,eid){
@@ -1121,57 +1145,151 @@ function renderDevNotes(){
   }
   el.innerHTML=html;
 }
+function exportDevNotesText(){
+  const notes=db.devNotes||[];
+  const active=notes.filter(n=>!n.checked);
+  const done=notes.filter(n=>n.checked);
+  let text='Clarity — Dev Notes\n'+'='.repeat(40)+'\n\n';
+  if(active.length){
+    text+='OPEN\n'+'-'.repeat(20)+'\n';
+    active.forEach(n=>{text+=`• ${n.text}\n  Added: ${new Date(n.createdAt).toLocaleDateString()}\n\n`;});
+  }
+  if(done.length){
+    text+='\nDONE\n'+'-'.repeat(20)+'\n';
+    done.forEach(n=>{text+=`✓ ${n.text}\n  Done: ${new Date(n.checkedAt||n.createdAt).toLocaleDateString()}\n\n`;});
+  }
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([text],{type:'text/plain'}));
+  a.download='clarity-dev-notes-'+toStr()+'.txt';
+  a.click();
+}
+
+// ══ LIFE AREAS (EDITABLE) ══
+function renderAreasSettings(){
+  const el=document.getElementById('areas-list');if(!el) return;
+  el.innerHTML=db.areas.map(a=>`
+    <div class="area-row">
+      <div class="area-row-icon">${esc(a.icon)}</div>
+      <div class="area-row-info">
+        <div class="area-row-name">${esc(a.name)}</div>
+        <div class="area-row-desc">${esc(a.description||'')}</div>
+      </div>
+      <button class="dn-edit-btn" onclick="showEditArea('${a.id}')">Edit</button>
+    </div>`).join('');
+}
+function showEditArea(id){
+  const isNew=id==='new';
+  const a=isNew?{id:uid(),icon:'📌',name:'',description:''}:db.areas.find(x=>x.id===id);
+  if(!a) return;
+  showModal(isNew?'New Area':'Edit Area',`
+    <div style="display:flex;gap:8px;margin-bottom:0;">
+      <div class="field" style="width:76px;flex-shrink:0;">
+        <label>Icon</label>
+        <input type="text" id="ea-icon" value="${esc(a.icon)}" style="text-align:center;font-size:20px;padding:8px;" maxlength="4">
+      </div>
+      <div class="field" style="flex:1;">
+        <label>Name</label>
+        <input type="text" id="ea-name" value="${esc(a.name)}" placeholder="Area name">
+      </div>
+    </div>
+    <div class="field">
+      <label>Description <span style="font-weight:400;text-transform:none;color:var(--mu);">short phrase</span></label>
+      <input type="text" id="ea-desc" value="${esc(a.description||'')}" placeholder="e.g. Living, household, routines">
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px;">
+      <button class="btn btn-p" style="flex:1;" onclick="${isNew?`addArea('${a.id}')`:`saveAreaEdit('${id}')`}">Save Area</button>
+      ${!isNew&&db.areas.length>1?`<button class="btn btn-del btn-s" onclick="deleteArea('${id}')">Remove</button>`:''}
+    </div>
+  `);
+}
+function showAddArea(){showEditArea('new');}
+function saveAreaEdit(id){
+  const a=db.areas.find(x=>x.id===id);if(!a) return;
+  const name=document.getElementById('ea-name').value.trim();if(!name){alert('Area name required.');return;}
+  a.icon=document.getElementById('ea-icon').value.trim()||a.icon;
+  a.name=name;
+  a.description=document.getElementById('ea-desc').value.trim();
+  persist();closeModal();renderAreasSettings();
+}
+function addArea(newId){
+  const name=document.getElementById('ea-name').value.trim();if(!name){alert('Area name required.');return;}
+  db.areas.push({
+    id:newId||uid(),
+    icon:document.getElementById('ea-icon').value.trim()||'📌',
+    name,
+    description:document.getElementById('ea-desc').value.trim()
+  });
+  persist();closeModal();renderAreasSettings();
+}
+function deleteArea(id){
+  if(!confirm('Remove this area? Threads tagged to it will lose this tag.')) return;
+  db.areas=db.areas.filter(a=>a.id!==id);
+  db.threads.forEach(t=>{t.areaIds=(t.areaIds||[]).filter(aid=>aid!==id);});
+  persist();closeModal();renderAreasSettings();
+}
+
+// ══ CSV EXPORT ══
+function exportCSV(){
+  const rows=[['Thread','Thread Type','Thread Status','Areas','Entry Type','Content','Due Date','Due Time','Completed','Created']];
+  db.threads.forEach(t=>{
+    const areaNames=(t.areaIds||[]).map(aid=>{const a=db.areas.find(x=>x.id===aid);return a?a.name:'';}).filter(Boolean).join('; ');
+    if(!(t.entries||[]).length){
+      rows.push([t.title,t.type,t.status,areaNames,'','','','','',new Date(t.createdAt).toLocaleDateString()]);
+    } else {
+      t.entries.forEach(e=>rows.push([
+        t.title,t.type,t.status,areaNames,
+        e.type,e.content,
+        e.dueDate||'',e.dueTime||'',
+        e.completed?'Yes':'No',
+        new Date(e.createdAt).toLocaleDateString()
+      ]));
+    }
+  });
+  const csv=rows.map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='clarity-'+toStr()+'.csv';
+  a.click();
+}
 
 // ══ CALENDAR ══
-let _calWeekOffset=0, _calSelectedDate=toStr();
+let _calWeekOffset=0,_calSelectedDate=toStr();
 const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MON_NAMES=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 function getWeekDates(offset){
-  const today=new Date();
-  today.setHours(0,0,0,0);
-  const dow=today.getDay(); // 0=Sun
+  const today=new Date();today.setHours(0,0,0,0);
+  const dow=today.getDay();
   const monday=new Date(today);
   monday.setDate(today.getDate()-((dow+6)%7)+offset*7);
-  return Array.from({length:7},(_,i)=>{
-    const d=new Date(monday);
-    d.setDate(monday.getDate()+i);
-    return d;
-  });
+  return Array.from({length:7},(_,i)=>{const d=new Date(monday);d.setDate(monday.getDate()+i);return d;});
 }
 function renderCalendar(){
   const dates=getWeekDates(_calWeekOffset);
-  const first=dates[0], last=dates[6];
-  // Week label
+  const first=dates[0],last=dates[6];
   const sameMonth=first.getMonth()===last.getMonth();
   document.getElementById('cal-week-lbl').textContent=sameMonth
     ?`${first.getDate()}–${last.getDate()} ${MON_NAMES[first.getMonth()]} ${first.getFullYear()}`
     :`${first.getDate()} ${MON_NAMES[first.getMonth()]} – ${last.getDate()} ${MON_NAMES[last.getMonth()]} ${last.getFullYear()}`;
-  // Gather all scheduled items
   const allItems=[];
   db.threads.forEach(t=>(t.entries||[]).forEach(e=>{
     if((e.type==='task'||e.type==='appointment'||e.type==='action')&&e.dueDate)
       allItems.push({...e,threadTitle:t.title,threadId:t.id});
   }));
   const todayStr=toStr();
-  // Day chips
   document.getElementById('cal-days').innerHTML=dates.map(d=>{
     const ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     const hasItems=allItems.some(i=>i.dueDate===ds);
-    const isTod=ds===todayStr;
-    const isSel=ds===_calSelectedDate;
+    const isTod=ds===todayStr,isSel=ds===_calSelectedDate;
     return `<button class="cal-day-btn ${isTod?'today':''} ${isSel?'selected':''}" onclick="selectCalDay('${ds}')">
       <span class="cal-day-name">${DAY_NAMES[d.getDay()]}</span>
       <span class="cal-day-num">${d.getDate()}</span>
-      ${hasItems?`<span class="cal-dot"></span>`:'<span style="width:5px;height:5px;"></span>'}
+      ${hasItems?`<span class="cal-dot"></span>`:'<span style="width:5px;height:5px;display:block;"></span>'}
     </button>`;
   }).join('');
   renderCalDay(_calSelectedDate);
 }
-function selectCalDay(ds){
-  _calSelectedDate=ds;
-  renderCalendar();
-}
+function selectCalDay(ds){_calSelectedDate=ds;renderCalendar();}
 function renderCalDay(ds){
   const allItems=[];
   db.threads.forEach(t=>(t.entries||[]).forEach(e=>{
@@ -1180,7 +1298,7 @@ function renderCalDay(ds){
   }));
   allItems.sort((a,b)=>{
     if(a.dueTime&&b.dueTime) return a.dueTime.localeCompare(b.dueTime);
-    if(a.dueTime) return -1; if(b.dueTime) return 1; return 0;
+    if(a.dueTime) return -1;if(b.dueTime) return 1;return 0;
   });
   const el=document.getElementById('cal-items');
   if(!allItems.length){
@@ -1197,10 +1315,7 @@ function renderCalDay(ds){
       </div>
     </div>`).join('');
 }
-function calShift(dir){
-  _calWeekOffset+=dir;
-  renderCalendar();
-}
+function calShift(dir){_calWeekOffset+=dir;renderCalendar();}
 
 // ══ NOTIFICATIONS ══
 let _notifTimers=[];
@@ -1230,27 +1345,18 @@ async function requestNotifPermission(){
 }
 function scheduleNotifications(){
   if(!('Notification' in window)||Notification.permission!=='granted') return;
-  // Clear previous timers
-  _notifTimers.forEach(t=>clearTimeout(t));
-  _notifTimers=[];
-  const todayStr=toStr();
-  const now=Date.now();
+  _notifTimers.forEach(t=>clearTimeout(t));_notifTimers=[];
+  const todayStr=toStr(),now=Date.now();
   db.threads.forEach(t=>(t.entries||[]).forEach(e=>{
     if(!e.dueDate||!e.dueTime||e.completed) return;
-    if((e.type!=='task'&&e.type!=='appointment'&&e.type!=='action')) return;
+    if(e.type!=='task'&&e.type!=='appointment'&&e.type!=='action') return;
     if(e.dueDate!==todayStr) return;
     const[hh,mm]=e.dueTime.split(':').map(Number);
     const dueMs=new Date().setHours(hh,mm,0,0);
-    const delay=dueMs-now;
-    if(delay<0) return; // already passed
+    const delay=dueMs-now;if(delay<0) return;
     const timer=setTimeout(()=>{
-      try{
-        new Notification('Clarity — '+e.content,{
-          body:t.title+' · '+fmtTime(e.dueTime),
-          icon:document.getElementById('app-touch-icon').href||'',
-          tag:e.id
-        });
-      }catch(err){}
+      try{new Notification('Clarity — '+e.content,{body:t.title+' · '+fmtTime(e.dueTime),icon:document.getElementById('app-touch-icon').href||'',tag:e.id});}
+      catch(err){}
     },delay);
     _notifTimers.push(timer);
   }));
@@ -1262,6 +1368,7 @@ function openSettings(){
   document.getElementById('s-key').value=db.settings.apiKey||'';
   document.getElementById('th-row').innerHTML=THEMES.map(t=>`<button class="th-btn ${t===db.settings.theme?'on':''}" data-t="${t}" onclick="setTheme('${t}')">${TNAMES[t]}</button>`).join('');
   document.getElementById('ov-settings').classList.add('open');
+  renderAreasSettings();
   renderDevNotes();
   renderNotifStatus();
 }
@@ -1377,7 +1484,6 @@ function boot(){
     const sw=`self.addEventListener('install',e=>e.waitUntil(caches.open('clarity-v1').then(c=>c.add('/'))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));`;
     navigator.serviceWorker&&navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
   }catch(e){}
-  // Reschedule notifications when app is brought to foreground
   document.addEventListener('visibilitychange',()=>{if(!document.hidden) scheduleNotifications();});
   if(!db.settings.name){document.getElementById('ov-setup').classList.add('open');}
   else{renderHome();badge();scheduleNotifications();}
